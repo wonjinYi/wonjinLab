@@ -2,6 +2,8 @@ window.addEventListener('DOMContentLoaded', main);
 
 
 function main(){
+	const TODAY = new Date();
+	//const 
 	const TARGET = {	'year' 		: document.getElementById("select_year")
 					, 	'month'		: document.getElementById("select_month")
 					,	't_header' 	: document.getElementById("table_head")
@@ -10,19 +12,11 @@ function main(){
 	const T_HEAD_SET = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
 	const T_SIZE = {'width' : T_HEAD_SET.length, 'height' : 6};
 	
-	
-	/*
-	const TARGET = {	'year' 		: document.getElementById("select_year")
-					, 	'month'		: document.getElementById("select_month") 
-				   	,	't_content'	: document.getElementById("table_body") 	};
-	*/
-	//const SELECTED_YEAR = TARGET['year'].options[TARGET['year'].selectedIndex].value
-	//const SELECTED_MONTH = TARGET['month'].options[TARGET['month'].selectedIndex].value
+
 	const DAY_SET = {'common'	:[31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 					,'leaf'		:[31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31] };
 	const BASE_SET = {'startPoint':5, 'year':1583}; //날짜 계산을 용이하게 하기 위한 '기준 년도의 1월1일의 <요일>' 을 사전정의함
 													//기준년도(year)는 1583년도이고, 1583년의 1월1일은 토요일(startPoint)임
-	//const T_SIZE = {'width' : 7, 'height' : 6};
 	
 	
 	//사용가능한 년/월 미리 정하기
@@ -36,16 +30,16 @@ function main(){
 		// --- 달력 헤더(요일부분) 그리기
 	drawHeaderView(TARGET['t_header'], T_HEAD_SET, T_SIZE);
 		// --- 달력 컨텐츠(날짜부분) 그리기
-	setOptionSelectedTrue(TARGET['year'],"2020");
-	setOptionSelectedTrue(TARGET['month'], "1");
+	setOptionSelectedTrue(TARGET['year'], TODAY.getFullYear() );
+	setOptionSelectedTrue(TARGET['month'], TODAY.getMonth()+1 );
 	drawBodyView(TARGET, DAY_SET, BASE_SET, T_SIZE);
 	
 	//년도,월 SELECT BOX 이벤트리스너 등록
 	TARGET['year'].addEventListener('change', function(e){
-		drawBodyView(TARGET, DAY_SET, BASE_SET, T_SIZE);
+		drawBodyView(TARGET, DAY_SET, BASE_SET, T_SIZE, TODAY );
 	});
 	TARGET['month'].addEventListener('change', function(e){
-		drawBodyView(TARGET, DAY_SET, BASE_SET, T_SIZE);
+		drawBodyView(TARGET, DAY_SET, BASE_SET, T_SIZE, TODAY );
 	});
 	
 }
@@ -64,10 +58,10 @@ function drawHeaderView(target, T_HEAD_SET, T_SIZE){
 }
 
 //날짜 영역 그리기 (테이블 컨텐츠 영역))
-function drawBodyView(TARGET, DAY_SET, BASE_SET, T_SIZE){
+function drawBodyView(TARGET, DAY_SET, BASE_SET, T_SIZE, TODAY){
 	const SELECTED_YEAR = TARGET['year'].options[TARGET['year'].selectedIndex].value
 	const SELECTED_MONTH = TARGET['month'].options[TARGET['month'].selectedIndex].value
-
+	
 	let str = '';
 	const tableValue = getCalendarValue(SELECTED_YEAR, SELECTED_MONTH, BASE_SET, DAY_SET, T_SIZE);
 
