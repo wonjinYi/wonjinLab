@@ -1,3 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap');
+
+body {
+    font-family: 'Nanum Gothic', sans-serif;
+    margin : 0;
+}
+
 article{
 	text-align : center;
 }
@@ -20,9 +27,8 @@ select:focus{
 	outline : 0;
 }
 
+
 table {
-	
-	
 	margin-left		: auto;
 	margin-right 	: auto;
 	margin-top		: 5px;
@@ -46,4 +52,11 @@ table td{
 #table_body{
 	background-color : #ffe0e8;
 	color : #d61a4a;
+}
+
+.today_date{
+	background-color : #ff4a74;
+	color : #FFFFFF;
+	font-weight : bold;
+	border-radius : 10px;
 }
