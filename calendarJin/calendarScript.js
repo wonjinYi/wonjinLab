@@ -36,10 +36,10 @@ function main(){
 	
 	//년도,월 SELECT BOX 이벤트리스너 등록
 	TARGET['year'].addEventListener('change', function(e){
-		drawBodyView(TARGET, DAY_SET, BASE_SET, T_SIZE, TODAY );
+		drawBodyView(TARGET, DAY_SET, BASE_SET, T_SIZE);
 	});
 	TARGET['month'].addEventListener('change', function(e){
-		drawBodyView(TARGET, DAY_SET, BASE_SET, T_SIZE, TODAY );
+		drawBodyView(TARGET, DAY_SET, BASE_SET, T_SIZE);
 	});
 	
 }
@@ -58,10 +58,12 @@ function drawHeaderView(target, T_HEAD_SET, T_SIZE){
 }
 
 //날짜 영역 그리기 (테이블 컨텐츠 영역))
-function drawBodyView(TARGET, DAY_SET, BASE_SET, T_SIZE, TODAY){
+function drawBodyView(TARGET, DAY_SET, BASE_SET, T_SIZE){
+	
 	const SELECTED_YEAR = TARGET['year'].options[TARGET['year'].selectedIndex].value
 	const SELECTED_MONTH = TARGET['month'].options[TARGET['month'].selectedIndex].value
 	
+	// 날짜 영역 구조 받아와서, 그대로 그리기
 	let str = '';
 	const tableValue = getCalendarValue(SELECTED_YEAR, SELECTED_MONTH, BASE_SET, DAY_SET, T_SIZE);
 
@@ -79,8 +81,26 @@ function drawBodyView(TARGET, DAY_SET, BASE_SET, T_SIZE, TODAY){
 		}
 		str += "</tr>";
 	}
-	
 	TARGET['t_content'].innerHTML = str;
+	
+	
+	// 그려진 달력에서, 오늘 날짜에 색칠하기
+	const TODAY = new Date();
+	if( ( SELECTED_YEAR==TODAY.getFullYear() ) && ( SELECTED_MONTH==TODAY.getMonth()+1 ) ){
+		
+		//TARGET['t_content'] 에서 오늘날짜에 해당하는 td요소 찾기
+		let todayDate = TODAY.getDate();
+		let tmpArr = TARGET['t_content'].getElementsByTagName("td");
+		
+		for(let i=0; i<tmpArr.length; i++){
+			if( tmpArr[i].innerText==todayDate ){
+				tmpArr[i].classList.add('today_date');
+				break;
+			}
+		}
+	}; 
+	
+	
 }
 
 //해당 년+월의 달력의 형태를 모두 계산하여 반환
@@ -99,7 +119,7 @@ function getCalendarValue(YEAR, MONTH, BASE_SET, DAY_SET, T_SIZE){
 	// 선택한 년도 1월 1일의 요일(시작요일)을 결정   					 0:월, 1:화, 2:수, 3:목, 4:금, 5:토, 6:일
 	let numYear = YEAR - BASE_SET['year'] + 1;
 	let numLeafyear = ( parseInt((YEAR-1)/4) - parseInt((YEAR-1)/100) + parseInt((YEAR-1)/400) ) // '선택된 년도까지의 윤년 수' 에서
-						- ( parseInt((BASE_SET['year']-2)/4) - parseInt((BASE_SET['year']-1)/100) + parseInt((BASE_SET['year']-1)/400) ); // '기준년도 까지의 윤년 수' 빼기
+						- ( parseInt((BASE_SET['year']-1)/4) - parseInt((BASE_SET['year']-1)/100) + parseInt((BASE_SET['year']-1)/400) ); // '기준년도 까지의 윤년 수' 빼기
 	let numCommonyear = numYear - numLeafyear;
 	
 	let startPoint_ofJanFirst = (BASE_SET['startPoint'] + (( numCommonyear + numLeafyear*2 ) % 7)) % 7
