@@ -2,9 +2,12 @@
 
 body {
     font-family: 'Nanum Gothic', sans-serif;
-    text-align : center;
+    
 }
 
+article {
+	text-align : center;
+}
 
 @media (max-width:769px){
 	img{
