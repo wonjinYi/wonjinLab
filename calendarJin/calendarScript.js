@@ -95,6 +95,7 @@ function drawBodyView(TARGET, DAY_SET, BASE_SET, T_SIZE){
 		for(let i=0; i<tmpArr.length; i++){
 			if( tmpArr[i].innerText==todayDate ){
 				tmpArr[i].classList.add('today_date');
+				tmpArr[i].onclick = function(){alert('아 lnx 적분하고싶다')}
 				break;
 			}
 		}
