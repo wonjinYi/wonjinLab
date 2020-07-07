@@ -3,29 +3,62 @@
     <meta charset="UTF-8">
     <meta http-equiv="EXPIRE" content="-1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <title>wonjin Lab :: Abyssal Snake</title>
 	
-    <link rel="stylesheet" href="style.css?v=2020_07_06_01">
-	<script type="text/javascript" src="calendarScript.js?v=2020_07_06"></script>
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap');
+
+		body { font-family: 'Nanum Gothic', sans-serif;  }
+		article { text-align : center; }
+		a { text-decoration : none; }
+		img { display : inline-block;}
+		
+		#start_btn{
+			display : inline-block;
+			padding : 30px;
+			background-color:#000000; 
+			color:#FFFFFF; 
+			font-size: 40px;
+			transition : all 1s;
+		}
+		#start_btn:hover{
+			
+			font-size: 100px;
+		}
+		
+		@media (max-width:769px){
+			img{
+				width : 70%;
+				height : auto;
+			}
+		}
+	</style>
 	
-    <title>wonjin Lab :: calendarJin</title>
 </head>
 
 <body>
 	<nav>
-		<a href="../">go to main</a>
+		<a href="../">back to main</a>
 	</nav>
 	
 
 	<article>
 		<H1 style="font-size:50px"> Abyssal Snake </H1>
-		<H4> A snake is in front of the abyss </H4>
-		<button style="width:220px; height:80px; background-color:#000000; color:#FFFFFF; font-size:20px;"> Into the Abyss </button>
-		<br>
-		<img src="tmp_img.png" width="500px" height="auto" alt="A snake is in front of the abyss">
+		<H4> A snake is in front of the Unknown </H4>
+		<a id="start_btn" href="game.html"> INTO THE ABYSS </a>
 		
-		<p>
-			<a href="https://i.ya-webdesign.com/images/lizard-svg-black-and-white-3.png" target="_blank">Snake image</a> by <a href="https://ya-webdesign.com/explore/lizard-svg-black-and-white-3.png/" target="_blank">YAWD</a>
-		</p>
+		<div>
+			<img src="tmp_img.png" width="500px" height="auto" alt="A snake is in front of the abyss">
+		</div>
+		
+
 		
 	</article>
+	
+	<footer>
+		<p>
+			<a href="https://i.ya-webdesign.com/images/lizard-svg-black-and-white-3.png" target="_blank">Snake image</a> 
+			by <a href="https://ya-webdesign.com/explore/lizard-svg-black-and-white-3.png/" target="_blank">YAWD</a>
+		</p>
+	</footer>
 </body>
