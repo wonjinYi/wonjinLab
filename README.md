@@ -11,5 +11,3 @@
 
 ### Resources used
 * Experiment Icon by Rank Sol on Iconscout
-
-test
