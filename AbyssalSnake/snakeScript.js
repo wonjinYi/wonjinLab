@@ -37,6 +37,21 @@ function main(){
 	
 }
 
-function printField(field){
-	
+function printField(target, FIELD_SIZE, snakePos, foodPos){
+	let str = '';
+	str+='<table id="field"><tbody>';
+	for(let i=0; i<FIELD_SIZE.width; i++){
+		str+='<tr>';
+		
+		for(let k=0; k<FIELD_SIZE.height; k++){
+			if(snakePos.x==i && snakePos.y==k){
+				//실제 필드 뿌리기
+			}
+		}
+			
+		str+='</tr>';
+	}
+	str+='</tbody></table>';
+		
+	target.innerHTML = str;
 }
