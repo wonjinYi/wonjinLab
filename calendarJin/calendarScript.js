@@ -132,7 +132,7 @@ function getCalendarValue(YEAR, MONTH, BASE_SET, DAY_SET, T_SIZE){
 	}
 	startPoint = ( startPoint_ofJanFirst + temp - 1 ) % 7;
 	
-	// 테이블에 표시할 배열 담기
+	// 테이블에 표시할 배열 구성하기
 	let tableValue = [];
 	temp = [];
 	
