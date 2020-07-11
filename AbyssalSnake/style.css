@@ -6,7 +6,32 @@ body {
 }
 
 article {
+	
 	text-align : center;
+}
+
+table{
+	margin : auto;
+	border-color : #ebebeb;
+	border-style : solid;
+	background-color : #ebebeb;
+	border-width : 1px;
+}
+
+td{
+	width : 20px;
+	height : 20px;
+	background-color : #d1d1d1;
+}
+.snakehead{
+	background-color : #000000;
+}
+.snakebody{
+	background-color : #4a4a4a;
+}
+
+.food{
+	background-color : #ffbf00;
 }
 
 @media (max-width:769px){
