@@ -81,7 +81,7 @@ async function main(){
 
 	let Snake = {
 		position : [],
-		length : 2,
+		length : 5,
 		direction : 'up',
 		
 		initPosition : async function(FIELD_SIZE){
@@ -89,7 +89,7 @@ async function main(){
 			let colCenter = parseInt(FIELD_SIZE.width / 2);
 			for(let i=0; i<this.length; i++){
 				let tmp = {};
-				tmp.row = rowCenter-i;
+				tmp.row = rowCenter+i;
 				tmp.col = colCenter;
 				this.position.push(tmp);
 			}
@@ -98,23 +98,23 @@ async function main(){
 			let tmp = {};
 			tmp.row = this.position[0].row;
 			tmp.col = this.position[0].col;
-			
+			//console.log(this.direction);
 			if		(this.direction == 'up')	{ tmp.row = ( this.position[0].row ) - 1; }
 			else if	(this.direction == 'down')	{ tmp.row = ( this.position[0].row ) + 1; }
 			else if	(this.direction == 'left')	{ tmp.col = ( this.position[0].col ) - 1; }
 			else if	(this.direction == 'right')	{ tmp.col = ( this.position[0].col ) + 1; }
 			else { console.log(this.direction + " : snake updatePosition 실행 실패"); }
-			console.log('update direction : '+this.direction);
+			//console.log('update direction : '+this.direction);
 			this.position.unshift(tmp);
 			this.position.pop();
 		},
-		turn : function(e) {
-			console.log(this.direction +'    '+e.keyCode);
-			if(e.keyCode == 37 && this.direction != 'right'){ this.direction = 'left'; }
-			else if(e.keyCode == 38 && this.direction != 'down'){this.direction = 'up'; }
-			else if(e.keyCode == 39 && this.direction != 'left'){this.direction = 'right'; }
-			else if(e.keyCode == 40 && this.direction != 'up'){this.direction = 'down'; }
-			console.log(this.direction);
+		turn : function(keyCode) {
+			console.log(this.direction +'    '+keyCode);
+			if(keyCode == 37 && this.direction != 'right'){ this.direction = 'left'; }
+			else if(keyCode == 38 && this.direction != 'down'){this.direction = 'up'; }
+			else if(keyCode == 39 && this.direction != 'left'){this.direction = 'right'; }
+			else if(keyCode == 40 && this.direction != 'up'){this.direction = 'down'; }
+			//console.log(this.direction);
 		}
 	};
 	let Food = {
@@ -165,7 +165,9 @@ async function main(){
 	await Field.updateView(FIELD_SIZE, Snake.position, Food.position);
 	await Field.drawView(FIELD_SIZE, TARGET.article);
 	
-	window.addEventListener('keydown', Snake.turn);
+	window.addEventListener('keydown', function (e){
+		Snake.turn(e.keyCode);
+	});
 	
 	//게임 메인루프
 	//await setInterval(Snake.updatePosition, 300);
@@ -180,15 +182,6 @@ async function main(){
 	//while(gameover==false){
 		//먹이유무 체크 -> 먹이생성, 길이 1증감
 		//머리가 벽/몸에 닿았는지 체크 -> 게임종료 및 루프 탈출
-		//방향키 눌림 -> 방향전환
-		//뱀 이동
-		//await Snake.updatePosition();
-		
-		//화면 새로그리기
-		/*
-		await Field.updateView(FIELD_SIZE, Snake.position, Food.position);
-		await Field.drawView(FIELD_SIZE, TARGET.article);
-		*/
 	//}
 	
 	//게임오버 후 점수 표시 + 대문으로 돌아가기 기능
