@@ -1,15 +1,16 @@
 window.addEventListener('DOMContentLoaded', main);
 
 async function main(){
-	
-	//let DATA=[];
+	const TARGET={
+		article : document.getElementById('jjoriping')
+	};
 	const SOURCE={
 		submitted : 'https://spreadsheets.google.com/feeds/list/1ZPg6mfEvkzk-8fBvSTfLzNr5CuD5XT9HP2X6FmXbgTU/2/public/full?alt=json',
 		subject_type : 'https://spreadsheets.google.com/feeds/list/1ZPg6mfEvkzk-8fBvSTfLzNr5CuD5XT9HP2X6FmXbgTU/3/public/full?alt=json'
 	}
-	const COL = ['제출자','과제유형','서비스url'];
+	const COLUMNS = ['제출자','과제유형','제목', '서비스url','메모'];
 	
-	const SUBMITTED_LIST = await makeArrayFromJson(SOURCE.submitted, COL);
+	const SUBMITTED_LIST = await makeArrayFromJson(SOURCE.submitted, COLUMNS);
 	const SUBJECT_TYPE = await async function(url){
 		const res = await fetch(url);
 		let temp = await res.json();
@@ -24,17 +25,28 @@ async function main(){
 		return _DATA; 
 													}(SOURCE.subject_type)
 	
-	
 	console.log(SUBJECT_TYPE);
 	
-}
-async function makeHtmlString(subjectType, arr){
 	let str = '';
-	str += '<div id="'+subjectType+'">'
-	str += '<h1 class="title">'+subjectType+'<h1>';
+	for(let i=0; i<SUBJECT_TYPE.length; i++){
+		str += makeHtmlString(SUBJECT_TYPE[i], SUBMITTED_LIST);
+	}
+	TARGET['article'].innerHTML = str;
+	
+	
+}
+function makeHtmlString(subjectType, arr){
+	let str = '';
+	str += '<div id="'+subjectType+'" class="type-container">'
+	str += '<h2 class="type">'+subjectType+'</h2>';
 	str += '<ul>';
 	for(let i=0; i<arr.length; i++){
-		str += '<li>'+arr[i]['$t']+'</li>';
+		if(arr[i]["과제유형"] == subjectType){
+			str += 	'<li class="list">';
+			str +=		'<a class="title" href="'+arr[i]['서비스url']+'" target="_blank">'+arr[i]['제목']+'</a>';
+			str += 		' by '+arr[i]['제출자']+' " '+arr[i]['메모']+' "';
+			str +=	'</li>';
+		}
 	}
 	str += '</ul>';
 	str += '</div>';
