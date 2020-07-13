@@ -1,6 +1,6 @@
 # wonjin Lab
 
-![logo](./res/logo.png)
+
 
 ###### There is nothing useful. This is repository for recording i learned about javascript, and so small code too.
 ###### 작고 귀여운 프로그램, 그리고 공부한 나날을 남깁니다.
@@ -12,3 +12,5 @@
 
 ### Resources used
 * Experiment Icon by Rank Sol on Iconscout
+
+![logo](./res/logo.png)
