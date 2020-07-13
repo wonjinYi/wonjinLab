@@ -33,7 +33,12 @@
 			}
 		}
 	</style>
-	
+	<script>
+		window.addEventListener('keydown', function(e){
+			this.removeEventListener("keydown",arguments.callee);
+			if(e.keyCode == 13){location.replace("game.html");}
+		});
+	</script>
 </head>
 
 <body>

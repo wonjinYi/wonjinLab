@@ -208,8 +208,11 @@ function main(){
 	
 	// 좌우 화살표가 눌리면 각 모드에 적합하게 루프 시작
 	window.addEventListener('keydown', function(e){
-		intervalId = setLoop(FIELD_SIZE, TARGET, Snake, Food, Field, Score, e.keyCode, updateInterval);
-		this.removeEventListener("keydown",arguments.callee);
+		if(e.keyCode == 37 || e.keyCode == 39){
+			intervalId = setLoop(FIELD_SIZE, TARGET, Snake, Food, Field, Score, e.keyCode, updateInterval);
+			this.removeEventListener("keydown",arguments.callee);
+		}
+		
 	});
 	
 	TARGET.onscreen_keyboard.addEventListener('mousedown', function(e){
