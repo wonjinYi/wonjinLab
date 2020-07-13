@@ -17,15 +17,29 @@
 	
 
 	<article>
-		<div id="score"></div>
+		<div id="score_board">
+			<H2 id="score">0</H2>
+		</div>
 		
 		<div id="field"></div>
 		
+		
 		<div id="onscreen_keyboard">
-			<a>↑</a>
-			<a>←</a>
-			<a>→</a>
-			<a>↓</a>
+			<!--
+			<div class="booster">
+				<a class="key">★</a>
+			</div>
+			-->
+			<div class="move">
+				<a class="key" data-keycode="38">▲</a>
+				<div>
+					<a class="key" data-keycode="37" id="left_key">◀</a>
+					<a class="key">■</a>
+					<a class="key" data-keycode="39" id="right_key">▶</a>
+				</div>
+				<a class="key" data-keycode="40">▼</a>
+			</div>
+		
 		</div>
 		
 	</article>

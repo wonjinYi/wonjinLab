@@ -1,6 +1,8 @@
 document.addEventListener("DOMContentLoaded", main);
 
-async function main(){
+
+
+function main(){
 	
 	//그냥 콘솔에 환영메시지 띄워주는 함수임. 쓸모없음.
 	hiDeveloper();
@@ -13,27 +15,26 @@ async function main(){
 	const TARGET = { 
 		score : document.getElementById('score'), 
 		field : document.getElementById('field'), 
-		onscreen_key : document.getElementById('onscreen_keyboard')
+		onscreen_keyboard : document.getElementById('onscreen_keyboard'),
+		
+		left_key : document.getElementById("left_key"),
+		right_key : document.getElementById("right_key")
 	};
 		
 	const FIELD_SIZE={	
 		width:21,
 		height:21	
 	}; 
-	const INITIAL_UPDATE_INTERVAL = 200;
-
+	const INITIAL_UPDATE_INTERVAL = 300;
+	
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	
 	// Define Game Object
 	let Score = {
-		drawScore : async function(snakeLength, target){
-			let str = '';
-			str += '<h3>SCORE</h3>';
-			str += '<h5>'+snakeLength+'</h5>';
-			
-			target.innerHTML = str;
+		drawScore : function(snakeLength, target){
+			target.innerHTML = snakeLength;
 		}	
 	};
 	let Field = {
@@ -43,7 +44,7 @@ async function main(){
 		// 3 : 먹이 ( element class : food )
 		view : [],
 		
-		initView : async function(FIELD_SIZE){
+		initView : function(FIELD_SIZE){
 			// view를 FIELD_SIZE에 따라 2차원 배열로 구성
 			// 모든 셀은 0 (빈 공간)으로 초기화
 			for(let i=0; i<FIELD_SIZE.height; i++){
@@ -55,7 +56,7 @@ async function main(){
 				this.view.push(tmp);
 			}
 		},
-		updateView : async function(FIELD_SIZE, snakePos, foodPos){
+		updateView : function(FIELD_SIZE, snakePos, foodPos){
 				// 모든 셀을 0으로 초기화
 				for(let i=0; i<FIELD_SIZE.height; i++){
 					for(let k=0; k<FIELD_SIZE.width; k++){
@@ -75,7 +76,7 @@ async function main(){
 				
 		
 		},
-		drawView : async function(FIELD_SIZE, target){
+		drawView : function(FIELD_SIZE, target){
 			let str = '';
 			
 			str+='<table id="field"><tbody>';
@@ -90,7 +91,7 @@ async function main(){
 				}
 				str+='</tr>';
 			}
-			str+='</tbody></table>';
+			str+='</tbody></table><p>Press LEFT or Right ( [LEFT]:normal [RIGHT]:hardcore )</p>';
 			target.innerHTML = str;
 		}
 	};
@@ -101,12 +102,13 @@ async function main(){
 						// [{머리}, {몸통1}, {몸통2}, ... ,{몸통n (꼬리)}]
 		recentRemovedPosition : {}, // 가장 최근에 화면에서 삭제된 position이다(잉여분). 이 부분은 길이신장 시 확장될 꼬리로 사용한다.
 		
-		length : 5,
+		length : 2,
 		direction : 'up',
 		activateKeydown : true,	// 키 입력->방향 전환후, 위치정보가 업데이트 되기 전에 새로운 키입력이 들어오는 것을 방지
 								// true : 현재 키입력 받을 수 있음(활성화됨), false : 현재 키입력 받을 수 없음(비활성화)
+		deceleration : 100, // 감속도 ( 느려지는 정도 )
 		
-		initPosition : async function(FIELD_SIZE){
+		initPosition : function(FIELD_SIZE){
 			let rowCenter = parseInt(FIELD_SIZE.height / 2);
 			let colCenter = parseInt(FIELD_SIZE.width / 2);
 			for(let i=0; i<this.length; i++){
@@ -143,8 +145,17 @@ async function main(){
 			else if(keyCode == 38 && this.direction != 'down'){this.direction = 'up'; }
 			else if(keyCode == 39 && this.direction != 'left'){this.direction = 'right'; }
 			else if(keyCode == 40 && this.direction != 'up'){this.direction = 'down'; }
+		
 		},
-		lengthen : async function(){
+		brake : function(keyCode, intervalId){
+			if(keyCode == 32){
+				/*
+				clearInterval(intervalId);
+				this.deceleration += 
+			*/
+			}
+		},
+		lengthen : function(){
 			this.length += 1;
 			this.position.push(this.recentRemovedPosition);
 		}
@@ -153,7 +164,7 @@ async function main(){
 		position : {row:0, col:0},
 		isExist : false, // false:필드에 없다, true:필드에 있다
 		
-		feed : async function(FIELD_SIZE, snakePos, snake){
+		feed : function(FIELD_SIZE, snakePos, snake){
 			if(this.isExist == false){
 				let tmp={};
 				let flag = false; // tmp값과 snake.posision의 겹치는지 여부 판단 ( false : 판단 전-아직 판단안됨 or 판단 후-겹치지 않음 , true : 겹침  )
@@ -187,61 +198,97 @@ async function main(){
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	
-	let gameover = false; // true : 게임오버됨 , false : 게임 진행중
+	//let gameover = false; // true : 게임오버됨 , false : 게임 진행중
 	let updateInterval = INITIAL_UPDATE_INTERVAL;
+	let intervalId = 0;
 	
-	//게임환경 초기 설정
-	await Snake.initPosition(FIELD_SIZE);
-	await Food.feed(FIELD_SIZE, Snake.position);
+	// 게임 정보 및 화면 최초세팅
+	initialSetting(FIELD_SIZE, TARGET, Snake, Food, Field);
+
 	
-	await Field.initView(FIELD_SIZE)
-	await Field.updateView(FIELD_SIZE, Snake.position, Food.position);
-	await Field.drawView(FIELD_SIZE, TARGET.field);
-	
-	window.addEventListener('keydown', function (e){
-		if(Snake.activateKeydown==true){ Snake.turn(e.keyCode); }
+	// 좌우 화살표가 눌리면 각 모드에 적합하게 루프 시작
+	window.addEventListener('keydown', function(e){
+		intervalId = setLoop(FIELD_SIZE, TARGET, Snake, Food, Field, Score, e.keyCode, updateInterval);
+		this.removeEventListener("keydown",arguments.callee);
 	});
 	
-	//게임 메인루프
-	let intervalId = setInterval(async function(){
+	TARGET.onscreen_keyboard.addEventListener('mousedown', function(e){
+		this.removeEventListener("mousedown",arguments.callee);
+		if(e.target == TARGET.left_key){
+			intervalId = setLoop(FIELD_SIZE, TARGET, Snake, Food, Field, Score, 37, updateInterval);
+		}
+		else if(e.target == TARGET.right_key){
+			intervalId = setLoop(FIELD_SIZE, TARGET, Snake, Food, Field, Score, 39, updateInterval);
+		}
 		
 		
-		await Snake.updatePosition();
-		await detectCollision(Snake, Food, FIELD_SIZE,intervalId);
-		await Food.feed(FIELD_SIZE, Snake.position);
-		await Field.updateView(FIELD_SIZE, Snake.position, Food.position);
-		await Field.drawView(FIELD_SIZE, TARGET.field);
-		await Score.drawScore(Snake.length, TARGET.score);
-		
-		
-	},updateInterval);
-	
-	//while(gameover==false){
-		//먹이유무 체크 -> 먹이생성, 길이 1증감
-		//머리가 벽/몸에 닿았는지 체크 -> 게임종료 및 루프 탈출
-	//}
-	
-	//게임오버 후 점수 표시 + 대문으로 돌아가기 기능
+	});
+
 	
 }
 
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////
-async function detectCollision(Snake, Food, FIELD_SIZE,intervalId){
+
+	//게임환경 초기 설정
+function initialSetting(FIELD_SIZE, TARGET, Snake, Food, Field){
+	Snake.initPosition(FIELD_SIZE);
+	Food.feed(FIELD_SIZE, Snake.position);
+	Snake.updatePosition();
+	Field.initView(FIELD_SIZE)
+	Field.updateView(FIELD_SIZE, Snake.position, Food.position);
+	Field.drawView(FIELD_SIZE, TARGET.field);
+}
+
+function setLoop(FIELD_SIZE, TARGET, Snake, Food, Field, Score, keycode, updateInterval){
+		
+		if(keycode == 39){ 
+			updateInterval -= 200; 
+		}
+	
+		//게임 메인루프
+		window.addEventListener('keydown', function (e){
+			if(Snake.activateKeydown==true){ Snake.turn(e.keyCode); }
+		});
+
+		Array.from(document.querySelectorAll('.key')).forEach((node) => {
+			node.addEventListener('touchstart', () => {
+				const keyCode = parseInt(node.getAttribute('data-keycode'), 10);
+				if(Snake.activateKeydown==true){ Snake.turn(keyCode); }
+			});
+		});
+
+		let intervalId = setInterval(function(){
+
+			Snake.updatePosition();
+			detectCollision(Snake, Food, FIELD_SIZE,intervalId);
+			Food.feed(FIELD_SIZE, Snake.position);
+			Field.updateView(FIELD_SIZE, Snake.position, Food.position);
+			Field.drawView(FIELD_SIZE, TARGET.field);
+			Score.drawScore(Snake.length, TARGET.score);
+
+
+		},updateInterval);
+	
+		return intervalId;
+	}
+
+
+function detectCollision(Snake, Food, FIELD_SIZE,intervalId){
 		let snakeHead = Snake.position[0];
 		
 		//먹이와 충돌 -> 먹이 없애고, 뱀 길이 1 신장
 		if(isSamePos(snakeHead, Food.position)){
 			Food.isExist = false;
-			await Snake.lengthen();
+			Snake.lengthen();
 		}
 
 		//벽과 충돌 -> 게임오버
 		else if(snakeHead.row<0 || snakeHead.row>FIELD_SIZE.height-1 || snakeHead.col<0 || snakeHead.col>FIELD_SIZE.width-1){
 			clearInterval(intervalId);
-			alert('아 lnx적분하고싶다');
-			
+			alert('======== SCORE : '+Snake.length+' ========');
+			alert('You do not deserve to enter the abyss. GET OUT FROM HERE');
 			location.replace("index.html");
 			
 		}

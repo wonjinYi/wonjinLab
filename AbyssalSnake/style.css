@@ -4,14 +4,17 @@ body {
     font-family: 'Nanum Gothic', sans-serif;
     
 }
-
+h1 { margin : 0;}
 article {
-	
-	text-align : center;
+	display : flex;
+	justify-content : center;
+	align-items : center;
 }
-
+article a{
+	font-size : 30px;
+}
 table{
-	margin : auto;
+	margin : 0;
 	border-color : #ebebeb;
 	border-style : solid;
 	background-color : #ebebeb;
@@ -34,9 +37,68 @@ td{
 	background-color : #ffbf00;
 }
 
+#score_board{
+	margin : 50px;
+	text-align : center;
+}
+#score{
+	margin : 0;
+	font-size : 50px;
+}
+
+#onscreen_keyboard{
+	flex: 1 0 0px;
+	display : flex;
+	align-items: center;
+	width: 100%;
+	box-sizing: border-box;
+	padding : 50px;
+	
+	text-align : center;
+}
+.key {
+	
+	padding : 20px;
+	border-radius : 10px;
+	background-color : #f0f0f0;
+}
+
+.booster, .move {
+	flex: 1 0 auto;
+}
+.booster{
+}
+.move{
+	display : flex;
+	flex-direction : column;
+	align-items : center;
+}
+.move div{
+	display : flex;
+}
+
 @media (max-width:769px){
-	img{
-		width : 100px;
-		height : auto;
+	article {
+		flex-direction: column;
+	}
+	#onscreen_keyboard {
+		padding: 20px;
+	}
+	td {
+		height: 12px;
+	}
+	#score_board {
+		margin: 10px;
+	}
+	#score{
+		font-size : 0px;
+	}
+	.key {
+		padding: 14px;
+	}
+	#field p{
+		font-size : 12px;
+		font-weight : bold;
+		margin : 0;
 	}
 }
