@@ -106,7 +106,6 @@ function main(){
 		direction : 'up',
 		activateKeydown : true,	// 키 입력->방향 전환후, 위치정보가 업데이트 되기 전에 새로운 키입력이 들어오는 것을 방지
 								// true : 현재 키입력 받을 수 있음(활성화됨), false : 현재 키입력 받을 수 없음(비활성화)
-		deceleration : 100, // 감속도 ( 느려지는 정도 )
 		
 		initPosition : function(FIELD_SIZE){
 			let rowCenter = parseInt(FIELD_SIZE.height / 2);
@@ -146,14 +145,6 @@ function main(){
 			else if(keyCode == 39 && this.direction != 'left'){this.direction = 'right'; }
 			else if(keyCode == 40 && this.direction != 'up'){this.direction = 'down'; }
 		
-		},
-		brake : function(keyCode, intervalId){
-			if(keyCode == 32){
-				/*
-				clearInterval(intervalId);
-				this.deceleration += 
-			*/
-			}
 		},
 		lengthen : function(){
 			this.length += 1;
@@ -300,7 +291,8 @@ function detectCollision(Snake, Food, FIELD_SIZE,intervalId){
 		for(let i=1; i<Snake.length ; i++){
 			if(isSamePos(snakeHead, Snake.position[i])){
 				clearInterval(intervalId);
-				alert('아 lnx적분하고싶다');
+				alert('======== SCORE : '+Snake.length+' ========');
+				alert('You do not deserve to enter the abyss. GET OUT FROM HERE');
 			
 				location.replace("index.html");
 			}
