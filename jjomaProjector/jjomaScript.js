@@ -36,10 +36,14 @@ async function main(){
 	
 }
 function makeHtmlString(subjectType, arr){
+	// html 구문 만들기
+	let tmp = ''; // 해당 subjectType안에 리스트가 하나라도 있는지 확인하기 위한 초기문자열
+	
 	let str = '';
 	str += '<div id="'+subjectType+'" class="type-container">'
 	str += '<h2 class="type">'+subjectType+'</h2>';
 	str += '<ul>';
+	tmp = str;
 	for(let i=0; i<arr.length; i++){
 		if(arr[i]["과제유형"] == subjectType){
 			str += 	'<li class="list">';
@@ -48,8 +52,11 @@ function makeHtmlString(subjectType, arr){
 			str +=	'</li>';
 		}
 	}
+	if(str == tmp){ return ''; } // 리스트 하나도없으면 과제유형 안보여줌
+	
 	str += '</ul>';
 	str += '</div>';
+
 	return str;
 }
 async function makeArrayFromJson(url, columns){
