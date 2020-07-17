@@ -13,19 +13,19 @@ async function main(){
 	const SUBMITTED_LIST = await makeArrayFromJson(SOURCE.submitted, COLUMNS);
 	const SUBJECT_TYPE = await async function(url){
 		const res = await fetch(url);
+		
 		let temp = await res.json();
 		temp = temp['feed']['entry'];
-
+	
 		let _DATA = [];
 		for(var i=0; i<Object.keys(temp).length; i++){
 				_DATA[i] = temp[i]['gsx$유형']['$t'];
-				//_DATA[i][columns[k]] = temp['feed']['entry'][i]['gsx$'+columns[k]]['$t'];
 		}
 		
 		return _DATA; 
 													}(SOURCE.subject_type)
 	
-	console.log(SUBJECT_TYPE);
+	// -----------------------------------------------------------
 	
 	let str = '';
 	for(let i=0; i<SUBJECT_TYPE.length; i++){
@@ -64,7 +64,6 @@ async function makeArrayFromJson(url, columns){
 	const res = await fetch(url);
   	let temp = await res.json();
  	temp = temp['feed']['entry'];
-	console.log(temp);
 
 	let _DATA = [];
 	for(var i=0; i<Object.keys(temp).length; i++){
@@ -72,11 +71,8 @@ async function makeArrayFromJson(url, columns){
 		_DATA[i]={};
 		for(var k=0; k<Object.keys(columns).length; k++){
 			_DATA[i][columns[k]] = temp[i]['gsx$'+columns[k]]['$t'];
-			//_DATA[i][columns[k]] = temp['feed']['entry'][i]['gsx$'+columns[k]]['$t'];
 		}
 	}
-	console.log(_DATA);
-	//console.log(_DATA[1]['제출자']["$t"]);
 	
 	return _DATA;
 }
