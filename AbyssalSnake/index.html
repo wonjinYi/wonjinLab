@@ -13,13 +13,30 @@
 		a { text-decoration : none; }
 		img { display : inline-block;}
 		
+		#navigator{
+			display : flex;
+  			justify-content: center;
+		}
+		#rank_btn{
+			display : flex;
+			align-items: center;
+			  justify-content: center;
+			padding : 10px 30px;
+			background-color : #fcc600;
+			font-size : 30px;
+			transition : all 0.2s;
+		}
+		#rank_btn:hover{
+			
+			font-size : 60px;
+		}
 		#start_btn{
-			display : inline-block;
+			
 			padding : 30px;
 			background-color:#000000; 
 			color:#FFFFFF; 
 			font-size: 40px;
-			transition : all 1s;
+			transition : all 0.5s;
 		}
 		#start_btn:hover{
 			
@@ -27,6 +44,10 @@
 		}
 		
 		@media (max-width:769px){
+			#navigator{
+				flex-direction: column-reverse;
+				
+			}
 			img{
 				width : 70%;
 				height : auto;
@@ -50,7 +71,12 @@
 	<article>
 		<H1 style="font-size:50px"> Abyssal Snake </H1>
 		<H4> A snake is in front of the Unknown </H4>
-		<a id="start_btn" href="game.html"> INTO THE ABYSS </a>
+		
+		<div id="navigator">
+			<a id="rank_btn" onclick="alert('아 lnx 적분하고싶다');"> Rank </a>
+			<a id="start_btn" href="game.html"> INTO THE ABYSS </a>
+		</div>
+		
 		
 		<div>
 			<img src="tmp_img.png" width="500px" height="auto" alt="A snake is in front of the abyss">
