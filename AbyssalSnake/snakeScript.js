@@ -255,7 +255,9 @@ function initialSetting(FIELD_SIZE, TARGET, Snake, Food, Field){
 }
 
 function setLoop(FIELD_SIZE, TARGET, Snake, Food, Field, Score, keycode, updateInterval, rank){
-
+	
+	if(keycode == 39){ updateInterval -= 200; }
+	
 	//키입력 받기
 	window.addEventListener('keydown', function (e){
 		if(Snake.activateKeydown==true){ Snake.turn(e.keyCode); }
@@ -284,7 +286,28 @@ function setLoop(FIELD_SIZE, TARGET, Snake, Food, Field, Score, keycode, updateI
 				location.replace("index.html");
 			}
 			else{
-				writeRank(rank, Snake, TARGET.article);
+				let str= '';
+				str += 	'<div id="rank_submit">';
+				str += 		'<h2>YOU ARE THE RANKER</h2>';
+				str += 		'<p><strong>Score : '+Snake.length+'</strong></p>';
+				str += 		'<p>Submit your name if you want to be a ranker</p>';
+				str +=		'<div>';
+				str +=			'<input type="text" id="name_input" placeholder="Write your name" name="rankname"></input>';
+				str += 			'<a id="submit_btn">Submit</a>';
+				str +=		'</div>';
+				str +=	'</div>';
+				
+				TARGET.article.innerHTML = str;
+				document.getElementById('submit_btn').addEventListener("click",function(e){
+					let target = document.getElementById('name_input');
+					
+					if( (target.value).includes(' ') == false && target.value!=''){
+						writeRank(rank, Snake, target.value);
+						location.replace("index.html");
+					}
+					
+				});
+				
 			}
 			
 		}
@@ -313,12 +336,6 @@ function detectCollision(Snake, Food, FIELD_SIZE,intervalId){
 	//벽과 충돌 -> 게임오버
 	if(snakeHead.row<0 || snakeHead.row>FIELD_SIZE.height-1 || snakeHead.col<0 || snakeHead.col>FIELD_SIZE.width-1){
 		gameover = true;
-		/*
-		clearInterval(intervalId);
-		alert('======== SCORE : '+Snake.length+' ========');
-		alert('You do not deserve to enter the abyss. GET OUT FROM HERE');
-		location.replace("index.html");
-		*/
 	}
 
 	//자기 몸과 충돌 -> 게임오버
@@ -327,12 +344,6 @@ function detectCollision(Snake, Food, FIELD_SIZE,intervalId){
 			if(isSamePos(snakeHead, Snake.position[i])){
 				gameover = true;
 				break;
-				/*clearInterval(intervalId);
-				alert('======== SCORE : '+Snake.length+' ========');
-				alert('You do not deserve to enter the abyss. GET OUT FROM HERE');
-
-				location.replace("index.html");
-				*/
 			}
 		}
 	}
@@ -343,50 +354,26 @@ function detectCollision(Snake, Food, FIELD_SIZE,intervalId){
 
 //순위권 안에 있는지 확인.
 function checkRanker(rank,snakeLength){
-	if(rank[rank.length-1]['name'] <= snakeLength){
+	if(rank[rank.length-1]['score'] <= snakeLength){
 		return true;
 	}
 	return false;
 }
 
-function writeRank(rank, Snake, target){
+function writeRank(rank, Snake, _name){
 	let date = new Date();
 	let currentTime = '';
-	currentTime = (date.getFullYear()-2000)+(date.getMonth()+1)+date.getDate+' '+date.getHours+':'+date.getMinutes();
-	
-	let key = Object.keys(rank[0]);
-	key.unshift("rank");
+	currentTime = date.getDate()+'.'+(date.getMonth()+1)+'.'+(date.getFullYear())+' '+date.getHours()+':'+date.getMinutes();
 	
 	for(let i=0; i<rank.length; i++){
-		if( Snake.length >= rank[i] ){
-			rank.splice(i, 1, {name:_name, score:Snake.length, time:currentTime});
+		if( Snake.length >= rank[i]['score'] ){
+			rank.splice(i, 0, {name:_name, score:Snake.length, time:currentTime});
+			rank.pop();
 			localStorage.setItem('rank', JSON.stringify(rank));
+			alert('save your score succesfully');
 			break;
 		}
 	}
-	
-	let str = '';
-	str += '<table id="rank"><tbody>'
-	
-	//헤더부 구성
-	str += '<tr class="rank_head">';
-	for(let i=0; i<key.length; i++){
-		str += '<td>'+key[i]+'</td>';
-	}
-	str += '</tr>';
-	
-	//내용부 구성
-	for(let i=0; i<rank.length; i++){
-		str += '<tr>';
-		str += '<td>'+i+'</td>';
-		for(let k=0; k<key.length; k++){
-			str += '<td>'+rank[i][key[k]]+'</td>';
-		}
-		str += '</tr>';
-	}
-	str += '</tbody></table>'
-
-	target.innerHTML = str;
 }
 
 function isSamePos(snakeHead, food){	// 두 position의 값이 같은지 확인. 
