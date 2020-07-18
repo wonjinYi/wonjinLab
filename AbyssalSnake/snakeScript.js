@@ -13,6 +13,7 @@ function main(){
 	
 	// Constant can be handled
 	const TARGET = { 
+		article : document.getElementById('article'),
 		score : document.getElementById('score'), 
 		field : document.getElementById('field'), 
 		onscreen_keyboard : document.getElementById('onscreen_keyboard'),
@@ -26,7 +27,25 @@ function main(){
 		height:21	
 	}; 
 	const INITIAL_UPDATE_INTERVAL = 300;
+	const RANK_SIZE = 10;
 	
+	//ranking data that contains highest 10 scores
+	let rank = []
+	let rankExist = localStorage.getItem('rankExist');
+	if(rankExist == null){
+		for(let i=0; i<RANK_SIZE; i++){
+			rank[i] = {name:'no-name', score:0, time:'no-time'}
+		}
+		localStorage.setItem('rank', JSON.stringify(rank));
+		localStorage.setItem('rankExist', true);
+	}
+	else {
+		rank = JSON.parse( localStorage.getItem('rank') );
+	}
+	
+	console.log(rankExist);
+	
+	//localStorage.clear();
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////
@@ -200,21 +219,21 @@ function main(){
 	// 좌우 화살표가 눌리면 각 모드에 적합하게 루프 시작
 	window.addEventListener('keydown', function(e){
 		if(e.keyCode == 37 || e.keyCode == 39){
-			intervalId = setLoop(FIELD_SIZE, TARGET, Snake, Food, Field, Score, e.keyCode, updateInterval);
+			intervalId = setLoop(FIELD_SIZE, TARGET, Snake, Food, Field, Score, e.keyCode, updateInterval, rank);
 			this.removeEventListener("keydown",arguments.callee);
 		}
 		
 	});
 	
 	TARGET.onscreen_keyboard.addEventListener('mousedown', function(e){
-		this.removeEventListener("mousedown",arguments.callee);
 		if(e.target == TARGET.left_key){
-			intervalId = setLoop(FIELD_SIZE, TARGET, Snake, Food, Field, Score, 37, updateInterval);
+			intervalId = setLoop(FIELD_SIZE, TARGET, Snake, Food, Field, Score, 37, updateInterval, rank);
+			this.removeEventListener("mousedown",arguments.callee);
 		}
 		else if(e.target == TARGET.right_key){
-			intervalId = setLoop(FIELD_SIZE, TARGET, Snake, Food, Field, Score, 39, updateInterval);
+			intervalId = setLoop(FIELD_SIZE, TARGET, Snake, Food, Field, Score, 39, updateInterval, rank);
+			this.removeEventListener("mousedown",arguments.callee);
 		}
-		
 		
 	});
 
@@ -235,68 +254,139 @@ function initialSetting(FIELD_SIZE, TARGET, Snake, Food, Field){
 	Field.drawView(FIELD_SIZE, TARGET.field);
 }
 
-function setLoop(FIELD_SIZE, TARGET, Snake, Food, Field, Score, keycode, updateInterval){
+function setLoop(FIELD_SIZE, TARGET, Snake, Food, Field, Score, keycode, updateInterval, rank){
+
+	//키입력 받기
+	window.addEventListener('keydown', function (e){
+		if(Snake.activateKeydown==true){ Snake.turn(e.keyCode); }
+	});
+
+	Array.from(document.querySelectorAll('.key')).forEach((node) => {
+		node.addEventListener('touchstart', () => {
+			const keyCode = parseInt(node.getAttribute('data-keycode'), 10);
+			if(Snake.activateKeydown==true){ Snake.turn(keyCode); }
+		});
+	});
+
+	//그 외 게임 메인루프 설정
+	let intervalId = setInterval(function(){
+		Snake.updatePosition();
 		
-		if(keycode == 39){ 
-			updateInterval -= 200; 
+		let gameover = detectCollision(Snake, Food, FIELD_SIZE,intervalId);
+		if(gameover == true){
+			clearInterval(intervalId);
+			alert('\n======== SCORE : '+Snake.length+' ========\n');
+			alert('You do not deserve to enter the abyss. GET OUT FROM HERE');
+			
+			let isRanker = checkRanker(rank, Snake.length);
+			
+			if(isRanker == false){
+				location.replace("index.html");
+			}
+			else{
+				writeRank(rank, Snake, TARGET.article);
+			}
+			
 		}
-	
-		//게임 메인루프
-		window.addEventListener('keydown', function (e){
-			if(Snake.activateKeydown==true){ Snake.turn(e.keyCode); }
-		});
+		
+		Food.feed(FIELD_SIZE, Snake.position);
+		Field.updateView(FIELD_SIZE, Snake.position, Food.position);
+		Field.drawView(FIELD_SIZE, TARGET.field);
+		Score.drawScore(Snake.length, TARGET.score);
+	},updateInterval);
 
-		Array.from(document.querySelectorAll('.key')).forEach((node) => {
-			node.addEventListener('touchstart', () => {
-				const keyCode = parseInt(node.getAttribute('data-keycode'), 10);
-				if(Snake.activateKeydown==true){ Snake.turn(keyCode); }
-			});
-		});
-
-		let intervalId = setInterval(function(){
-
-			Snake.updatePosition();
-			detectCollision(Snake, Food, FIELD_SIZE,intervalId);
-			Food.feed(FIELD_SIZE, Snake.position);
-			Field.updateView(FIELD_SIZE, Snake.position, Food.position);
-			Field.drawView(FIELD_SIZE, TARGET.field);
-			Score.drawScore(Snake.length, TARGET.score);
-
-
-		},updateInterval);
-	
-		return intervalId;
-	}
+	return intervalId;
+}
 
 
 function detectCollision(Snake, Food, FIELD_SIZE,intervalId){
-		let snakeHead = Snake.position[0];
 		
-		//먹이와 충돌 -> 먹이 없애고, 뱀 길이 1 신장
-		if(isSamePos(snakeHead, Food.position)){
-			Food.isExist = false;
-			Snake.lengthen();
-		}
+	let snakeHead = Snake.position[0];
+	let gameover = false; // true 게임종료 , false 계속
 
-		//벽과 충돌 -> 게임오버
-		else if(snakeHead.row<0 || snakeHead.row>FIELD_SIZE.height-1 || snakeHead.col<0 || snakeHead.col>FIELD_SIZE.width-1){
-			clearInterval(intervalId);
-			alert('======== SCORE : '+Snake.length+' ========');
-			alert('You do not deserve to enter the abyss. GET OUT FROM HERE');
-			location.replace("index.html");
-			
-		}
+	//먹이와 충돌 -> 먹이 없애고, 뱀 길이 1 신장
+	if(isSamePos(snakeHead, Food.position)){
+		Food.isExist = false;
+		Snake.lengthen();
+	}
 	
-		//자기 몸과 충돌 -> 게임오버
+	//벽과 충돌 -> 게임오버
+	if(snakeHead.row<0 || snakeHead.row>FIELD_SIZE.height-1 || snakeHead.col<0 || snakeHead.col>FIELD_SIZE.width-1){
+		gameover = true;
+		/*
+		clearInterval(intervalId);
+		alert('======== SCORE : '+Snake.length+' ========');
+		alert('You do not deserve to enter the abyss. GET OUT FROM HERE');
+		location.replace("index.html");
+		*/
+	}
+
+	//자기 몸과 충돌 -> 게임오버
+	if(gameover == false){
 		for(let i=1; i<Snake.length ; i++){
 			if(isSamePos(snakeHead, Snake.position[i])){
-				clearInterval(intervalId);
+				gameover = true;
+				break;
+				/*clearInterval(intervalId);
 				alert('======== SCORE : '+Snake.length+' ========');
 				alert('You do not deserve to enter the abyss. GET OUT FROM HERE');
-			
+
 				location.replace("index.html");
+				*/
 			}
 		}
+	}
+	
+	
+	return gameover;
+}
+
+//순위권 안에 있는지 확인.
+function checkRanker(rank,snakeLength){
+	if(rank[rank.length-1]['name'] <= snakeLength){
+		return true;
+	}
+	return false;
+}
+
+function writeRank(rank, Snake, target){
+	let date = new Date();
+	let currentTime = '';
+	currentTime = (date.getFullYear()-2000)+(date.getMonth()+1)+date.getDate+' '+date.getHours+':'+date.getMinutes();
+	
+	let key = Object.keys(rank[0]);
+	key.unshift("rank");
+	
+	for(let i=0; i<rank.length; i++){
+		if( Snake.length >= rank[i] ){
+			rank.splice(i, 1, {name:_name, score:Snake.length, time:currentTime});
+			localStorage.setItem('rank', JSON.stringify(rank));
+			break;
+		}
+	}
+	
+	let str = '';
+	str += '<table id="rank"><tbody>'
+	
+	//헤더부 구성
+	str += '<tr class="rank_head">';
+	for(let i=0; i<key.length; i++){
+		str += '<td>'+key[i]+'</td>';
+	}
+	str += '</tr>';
+	
+	//내용부 구성
+	for(let i=0; i<rank.length; i++){
+		str += '<tr>';
+		str += '<td>'+i+'</td>';
+		for(let k=0; k<key.length; k++){
+			str += '<td>'+rank[i][key[k]]+'</td>';
+		}
+		str += '</tr>';
+	}
+	str += '</tbody></table>'
+
+	target.innerHTML = str;
 }
 
 function isSamePos(snakeHead, food){	// 두 position의 값이 같은지 확인. 

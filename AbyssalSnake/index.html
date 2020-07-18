@@ -27,7 +27,7 @@
 			transition : all 0.2s;
 		}
 		#rank_btn:hover{
-			
+			cursor:pointer;
 			font-size : 60px;
 		}
 		#start_btn{
@@ -43,6 +43,9 @@
 			font-size: 100px;
 		}
 		
+		#ranking_board{
+			display : none;
+		}
 		@media (max-width:769px){
 			#navigator{
 				flex-direction: column-reverse;
@@ -55,10 +58,72 @@
 		}
 	</style>
 	<script>
-		window.addEventListener('keydown', function(e){
-			this.removeEventListener("keydown",arguments.callee);
-			if(e.keyCode == 13){location.replace("game.html");}
+		
+		
+		document.addEventListener('DOMContentLoaded',function(e){
+			const TARGET = {
+				rank_btn : document.getElementById('rank_btn'),
+				rank_view : document.getElementById('rank_view')
+			};
+			
+			//그냥 엔터누르면 게임페이지로 가기
+			window.addEventListener('keydown', function(e){
+				this.removeEventListener("keydown",arguments.callee);
+				if(e.keyCode == 13){location.replace("game.html");}
+			});
+
+			//랭킹 불러오기
+			TARGET.rank_btn.addEventListener('click', function(e){
+				var rank = JSON.parse( localStorage.getItem('rank') );
+				console.log(rank);
+				if( (TARGET.rank_view.className) == 'close' ){
+					writeRank(rank, TARGET.rank_view);
+					TARGET.rank_view.classList.replace('close', 'open');
+				}
+				else {
+					TARGET.rank_view.innerHTML = '';
+					TARGET.rank_view.classList.replace('open', 'close');
+				}
+				
+				
+				
+			});
+			
+			
 		});
+		
+		function writeRank(rank, target){
+			let date = new Date();
+			let currentTime = '';
+			currentTime = (date.getFullYear()-2000)+(date.getMonth()+1)+date.getDate+' '+date.getHours+':'+date.getMinutes();
+
+			let key = Object.keys(rank[0]);
+			key.unshift("rank");
+
+			let str = '';
+			str += '<table id="rank"><tbody>'
+
+			//헤더부 구성
+			str += '<tr class="rank_head">';
+			for(let i=0; i<key.length; i++){
+				str += '<td>'+key[i]+'</td>';
+			}
+			str += '</tr>';
+
+			//내용부 구성
+			for(let i=0; i<rank.length; i++){
+				str += '<tr>';
+				str += '<td>'+(i+1)+'</td>';
+				for(let k=1; k<key.length; k++){
+					str += '<td>'+rank[i][key[k]]+'</td>';
+				}
+				str += '</tr>';
+			}
+			str += '</tbody></table>'
+
+			target.innerHTML = str;
+		}
+		
 	</script>
 </head>
 
@@ -73,10 +138,14 @@
 		<H4> A snake is in front of the Unknown </H4>
 		
 		<div id="navigator">
-			<a id="rank_btn" onclick="alert('아 lnx 적분하고싶다');"> Rank </a>
+			<a id="rank_btn"> Rank </a>
+			<div id="rank_view" class="close"></div>
 			<a id="start_btn" href="game.html"> INTO THE ABYSS </a>
 		</div>
 		
+		<div id="ranking_board">
+			
+		</div>
 		
 		<div>
 			<img src="tmp_img.png" width="500px" height="auto" alt="A snake is in front of the abyss">
