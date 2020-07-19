@@ -12,6 +12,7 @@
 * [calendar Jin](https://lab.wonj.in/calendarJin/) : calendar (jjoma assignment 1)
 * [Abyssal Snake](https://lab.wonj.in/AbyssalSnake/) : snake game (jjoma assignment 2)
 * [JJOMA Projector](https://lab.wonj.in/jjomaProjector/) : show assignments written by students of Jjoriping hacking training school
+* [GoesTop](https://lab.wonj.in/GoesTop/) : GoStop web game the Korea traditional board game (jjoma assignment 3)
 
 ### Resources used
 * Experiment Icon by Rank Sol on Iconscout
