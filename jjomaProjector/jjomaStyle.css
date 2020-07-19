@@ -61,9 +61,8 @@ ul{
 	transition : all 0.5s;
 }
 .title:hover{
-	font-size : 30px;
-	
-	border-left-width : 50px;
+	background-color : #ffaa00;
+	color : #FFFFFF;
 }
 
 

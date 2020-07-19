@@ -48,7 +48,9 @@ function makeHtmlString(subjectType, arr){
 		if(arr[i]["과제유형"] == subjectType){
 			str += 	'<li class="list">';
 			str +=		'<a class="title" href="'+arr[i]['서비스url']+'" target="_blank">'+arr[i]['제목']+'</a>';
-			str += 		' by '+arr[i]['제출자']+' " '+arr[i]['메모']+' "';
+			str += 		' by '+arr[i]['제출자'];
+			
+			if(arr[i]['메모'] != ''){str += ' "'+arr[i]['메모']+'"';}
 			str +=	'</li>';
 		}
 	}
