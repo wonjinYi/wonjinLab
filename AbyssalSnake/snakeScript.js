@@ -307,6 +307,9 @@ function setLoop(FIELD_SIZE, TARGET, Snake, Food, Field, Score, keycode, updateI
 						writeRank(rank, Snake, target.value);
 						location.replace("index.html");
 					}
+					else {
+						alert("There is no text, or contains space. Space is not allowed");
+					}
 					
 				});
 				
