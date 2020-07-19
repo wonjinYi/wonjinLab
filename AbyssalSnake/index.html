@@ -44,10 +44,26 @@
 		}
 		
 		#rank_view{
-			display : flex;
-			justify-content : center;
+			display : inline-block;
+			text-align : center;
 
 		}
+		
+		
+		td{
+			background-color : #f7df86;
+		}
+		.rank_head td{
+			background-color : #fcc600;
+		}
+		#rank_clear{
+			background-color : #fcc600;
+			text-align : right;
+			padding : 5px;
+			cursor:pointer;
+		}
+		
+		
 		@media (max-width:769px){
 			#navigator{
 				flex-direction: column-reverse;
@@ -78,9 +94,25 @@
 			TARGET.rank_btn.addEventListener('click', function(e){
 				var rank = JSON.parse( localStorage.getItem('rank') );
 				console.log(rank);
+				
+				if(rank==null){
+					alert("There is no rank records");
+					return 0;
+				}
+				
 				if( (TARGET.rank_view.className) == 'close' ){
 					writeRank(rank, TARGET.rank_view);
 					TARGET.rank_view.classList.replace('close', 'open');
+					
+					document.getElementById('rank_clear').addEventListener('click', function(e){
+						
+						let result = confirm("really?");
+						if(result){
+							localStorage.clear();
+							alert("succesfully cleared");
+							location.reload();
+						}
+					});
 				}
 				else {
 					TARGET.rank_view.innerHTML = '';
@@ -123,6 +155,7 @@
 			}
 			str += '</tbody></table>'
 
+			str += '<a id="rank_clear">Clear Ranking</a>';
 			target.innerHTML = str;
 		}
 		
@@ -144,7 +177,9 @@
 			
 			<a id="start_btn" href="game.html"> INTO THE ABYSS </a>
 		</div>
+		
 		<div id="rank_view" class="close"></div>
+		
 		
 		<div>
 			<img src="tmp_img.png" width="500px" height="auto" alt="A snake is in front of the abyss">

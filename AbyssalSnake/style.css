@@ -73,7 +73,14 @@ td{
 	display : flex;
 }
 
-
+#submit_btn{
+	
+	border-style : solid;
+	
+	cursor : pointer;
+	margin-left : 5px;
+	padding : 5px;
+}
 
 
 

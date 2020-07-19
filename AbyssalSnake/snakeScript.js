@@ -278,14 +278,16 @@ function setLoop(FIELD_SIZE, TARGET, Snake, Food, Field, Score, keycode, updateI
 		if(gameover == true){
 			clearInterval(intervalId);
 			alert('\n======== SCORE : '+Snake.length+' ========\n');
-			alert('You do not deserve to enter the abyss. GET OUT FROM HERE');
 			
 			let isRanker = checkRanker(rank, Snake.length);
 			
 			if(isRanker == false){
+				alert('You do not deserve to enter the abyss. GET OUT FROM HERE');
 				location.replace("index.html");
 			}
 			else{
+				alert('Well done, but not enough.');
+				
 				let str= '';
 				str += 	'<div id="rank_submit">';
 				str += 		'<h2>YOU ARE THE RANKER</h2>';
@@ -370,7 +372,7 @@ function writeRank(rank, Snake, _name){
 			rank.splice(i, 0, {name:_name, score:Snake.length, time:currentTime});
 			rank.pop();
 			localStorage.setItem('rank', JSON.stringify(rank));
-			alert('save your score succesfully');
+			alert('Your score is saved succesfully');
 			break;
 		}
 	}
