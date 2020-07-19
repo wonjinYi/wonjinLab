@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap');
+
+body {
+    font-family: 'Nanum Gothic', sans-serif;
+    
+}
+
+article{
+	text-align : center;
+	margin-top : 10px;
+}
+
+select{
+	text-align-last:center;
+	
+	margin-left : 2px;
+	margin-right : 2px;
+	width : 184px;
+	height : 40px;
+	border-radius : 10px;
+	
+	background-color : #ff4a74;
+	color : #FFFFFF;
+	font-size : 18px;
+	border : 0;
+}
+select:focus{
+	outline : 0;
+}
+
+
+table {
+	margin-left		: auto;
+	margin-right 	: auto;
+	margin-top		: 5px;
+	margin-bottom 	: 5px;
+	
+	border-radius : 10px;
+}
+
+table tr{
+	text-align : center;
+}
+table td{
+	width : 50px;
+	height : 50px;
+}
+#table_head{
+	background-color : #ff4a74;
+	color : #FFFFFF;
+}
+
+#table_body{
+	background-color : #ffe0e8;
+	color : #d61a4a;
+}
+
+.today_date{
+	background-color : #ff4a74;
+	color : #FFFFFF;
+	font-weight : bold;
+	border-radius : 10px;
+}
+
+@media (max-width:769px){
+	select{
+		width : 49%;
+	}
+	#select_year{
+		margin-left:0;
+		margin-right:0;
+	}
+	#select_month{
+		margin-right:0;
+	}
+}
