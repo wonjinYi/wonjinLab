@@ -15,8 +15,8 @@ async function main(){
 	
 	const CATEGORY_DEPTH = ["큰유형", "작은유형"];
 	
-	const SUBMITTED_LIST = await seperateRowFromJson(SOURCE.submitted, COLUMNS.submitted);
-	const ASSIGNMENT_TYPE = await seperateRowFromJson(SOURCE.assignment_type, COLUMNS.assignment_type);
+	const SUBMITTED_LIST = await separateRowFromJson(SOURCE.submitted, COLUMNS.submitted);
+	const ASSIGNMENT_TYPE = await separateRowFromJson(SOURCE.assignment_type, COLUMNS.assignment_type);
 	
 	console.log(SUBMITTED_LIST);
 	console.log(ASSIGNMENT_TYPE);
@@ -68,7 +68,7 @@ function makeStructuerdString(category, arr){
 	return str;
 }
 
-async function seperateRowFromJson(url, columns){
+async function separateRowFromJson(url, columns){
 
 	const res = await fetch(url);
   	let temp = await res.json();
