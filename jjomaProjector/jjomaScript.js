@@ -9,51 +9,28 @@ async function main(){
 		assignment_type : 'https://spreadsheets.google.com/feeds/list/1ZPg6mfEvkzk-8fBvSTfLzNr5CuD5XT9HP2X6FmXbgTU/3/public/full?alt=json'
 	};
 	const COLUMNS = {
-		submitted : ['제출자', '과제순서', '큰유형', '작은유형', '제목', '서비스url','메모'],
+		submitted : ['제출자', '큰유형', '작은유형', '제목', '서비스url','메모'],
 		assignment_type : ['큰유형', '작은유형', '설명']
 	};
 	
-	const SUBMITTED_LIST = await makeArrayFromJson(SOURCE.submitted, COLUMNS.submitted);
-	const ASSIGNMENT_TYPE = await makeArrayFromJson(SOURCE.assignment_type, COLUMNS.assignment_type);
-	/*
-	const SUBJECT_TYPE = await async function(url){
-		const res = await fetch(url);
-		
-		let temp = await res.json();
-		temp = temp['feed']['entry'];
-
-		let _DATA = [];
-		for(var i=0; i<Object.keys(temp).length; i++){
-				_DATA[i] = temp[i]['gsx$큰유형']['$t'];
-		}
-		
-		return _DATA; 
-													}(SOURCE.subject_type)
-	*/
-	// -----------------------------------------------------------
+	const CATEGORY_DEPTH = ["큰유형", "작은유형"];
 	
-	//nsole.log(ASSIGNMENT_TYPE);
+	const SUBMITTED_LIST = await seperateRowFromJson(SOURCE.submitted, COLUMNS.submitted);
+	const ASSIGNMENT_TYPE = await seperateRowFromJson(SOURCE.assignment_type, COLUMNS.assignment_type);
 	
-	// 지금 당장 출력을 위해서만 사용. 곧 사라져야됨.
-	let tempAssignType = [];
-	for(let i=0; i<ASSIGNMENT_TYPE.length; i++){
-		tempAssignType.push(ASSIGNMENT_TYPE[i]["큰유형"]);
-	}
-	tempAssignType = Array.from( new Set(tempAssignType) );
-	console.log(tempAssignType);
-	let str = '';
-	for(let i=0; i<tempAssignType.length; i++){
-		str += makeStructuerdString(tempAssignType[i], SUBMITTED_LIST);
-	}
+	console.log(SUBMITTED_LIST);
+	console.log(ASSIGNMENT_TYPE);
 	
-	/*
+	let tmp = getChildrenCategory(ASSIGNMENT_TYPE, CATEGORY_DEPTH, "큰유형", "달력 만들기");
+	console.log(tmp);
+	
 	let str = '';
 	for(let i=0; i<ASSIGNMENT_TYPE.length; i++){
-		str += makeStructuerdString(ASSIGNMENT_TYPE[i], SUBMITTED_LIST[i]);
+		//str += makeStructuerdString(ASSIGNMENT_TYPE[i], SUBMITTED_LIST[i]);
 	}
-	*/
 	
-	TARGET['article'].innerHTML = str;
+	
+	//TARGET['article'].innerHTML = str;
 	
 	
 }
@@ -91,7 +68,7 @@ function makeStructuerdString(category, arr){
 	return str;
 }
 
-async function makeArrayFromJson(url, columns){
+async function seperateRowFromJson(url, columns){
 
 	const res = await fetch(url);
   	let temp = await res.json();
@@ -99,7 +76,6 @@ async function makeArrayFromJson(url, columns){
 
 	let _DATA = [];
 	for(var i=0; i<Object.keys(temp).length; i++){
-	
 		_DATA[i]={};
 		for(var k=0; k<Object.keys(columns).length; k++){;
 			_DATA[i][columns[k]] = temp[i]['gsx$'+columns[k]]['$t'];
@@ -107,4 +83,22 @@ async function makeArrayFromJson(url, columns){
 	}
 	//nsole.log(_DATA);
 	return _DATA;
+}
+
+function getRootCategory(category, CATEGORY_DEPTH){
+	
+}
+
+function getChildrenCategory(category, CATEGORY_DEPTH, parentDepth, parentValue){
+	let childrenCategory = [];
+	const childrenDepth = CATEGORY_DEPTH[ CATEGORY_DEPTH.indexOf(parentDepth) + 1 ];
+	
+	for(let i=0; i<category.length; i++){
+		if(category[i][parentDepth] == parentValue){
+			childrenCategory.push(category[i][childrenDepth]);
+		}
+	}
+	
+	if(childrenCategory==""){ return null; }
+	else { return childrenCategory; }
 }
