@@ -13,15 +13,20 @@ async function main(){
 		assignment_type : ['큰유형', '작은유형', '설명']
 	};
 	
-	const CATEGORY_DEPTH = ["큰유형", "작은유형"];
+	const CATEGORY_KEY = {
+		main : "큰유형",
+		sub : "작은유형"
+	};
 	
 	const SUBMITTED_LIST = await separateRowFromJson(SOURCE.submitted, COLUMNS.submitted);
 	const ASSIGNMENT_TYPE = await separateRowFromJson(SOURCE.assignment_type, COLUMNS.assignment_type);
 	
+	let data = [];
+	
 	console.log(SUBMITTED_LIST);
 	console.log(ASSIGNMENT_TYPE);
 	
-	let tmp = getChildrenCategory(ASSIGNMENT_TYPE, CATEGORY_DEPTH, "큰유형", "달력 만들기");
+	let tmp = getSubCategory(ASSIGNMENT_TYPE, CATEGORY_KEY, "스네이크");
 	console.log(tmp);
 	
 	let str = '';
@@ -29,12 +34,63 @@ async function main(){
 		//str += makeStructuerdString(ASSIGNMENT_TYPE[i], SUBMITTED_LIST[i]);
 	}
 	
+	const ROOT_CATEGORY_SET = getRootCategory(ASSIGNMENT_TYPE, CATEGORY_KEY);
+	for(let i=0; i<ROOT_CATEGORY_SET.length; i++){
+		
+		const subCategory = getSubCategory(ASSIGNMENT_TYPE, CATEGORY_KEY, ROOT_CATEGORY_SET[i]);
+		categorizeItems(data, SUBMITTED_LIST, CATEGORY_KEY, ROOT_CATEGORY_SET[i], subCategory);
+	}
 	
+	console.log(data);
 	//TARGET['article'].innerHTML = str;
 	
 	
 }
 
+/*
+data = {
+	main : {
+		sub : {
+			assignment : " string ",
+			items : [row, row, row, ... , row]
+		}
+		sub : {
+			assignment : " string ",
+			items : [row, row, row, ... , row]
+		}
+	}
+}
+
+data.main.sub.item
+예시 ) data.스네이크.게임.item -> 스네이크-게임 카테고리에 속하는 모든 row리턴.
+*/
+
+function categorizeItems(data, source, CATEGORY_KEY, mainCategory, subCategory  ){
+	data[mainCategory] = {};
+	
+	// _data[] 객체에 서브카테고리 속성 추가
+	for(let i=0; i<subCategory.length; i++){
+		data[ mainCategory ][ subCategory[i] ] = {
+			items : []
+		};
+	}
+	
+	//console.log(data[mainCategory]);
+	
+	// 각 서브카테고리에 해당하는 row를, item속성에 넣어주기
+	for(let i=0; i<source.length; i++){
+		//console.log("test : "+i);
+		for(let k=0; k<subCategory.length; k++){
+			
+			if(source[i][CATEGORY_KEY.sub] == subCategory[k]){
+				( (data[ mainCategory ][ subCategory[k] ]).items ).push( source[i] );
+				break;
+			}
+			
+		}
+	}
+	
+}
 
 function makeStructuerdString(category, arr){
 	// html 구문 만들기
@@ -85,20 +141,27 @@ async function separateRowFromJson(url, columns){
 	return _DATA;
 }
 
-function getRootCategory(category, CATEGORY_DEPTH){
+function getRootCategory(source, CATEGORY_KEY){
+	let tmp = [];
+	for(let i=0; i<source.length; i++ ){
+		tmp.push(source[i][CATEGORY_KEY.main]);
+	}
 	
+	tmp = Array.from(new Set(tmp));
+	console.log("=====getroot : "+tmp);
+	return tmp;
 }
 
-function getChildrenCategory(category, CATEGORY_DEPTH, parentDepth, parentValue){
-	let childrenCategory = [];
-	const childrenDepth = CATEGORY_DEPTH[ CATEGORY_DEPTH.indexOf(parentDepth) + 1 ];
+function getSubCategory(category, CATEGORY_KEY, mainCategoryValue){
+	let subCategory = [];
 	
 	for(let i=0; i<category.length; i++){
-		if(category[i][parentDepth] == parentValue){
-			childrenCategory.push(category[i][childrenDepth]);
+		
+		if(category[i][CATEGORY_KEY.main] == mainCategoryValue){
+			subCategory.push(category[i][CATEGORY_KEY.sub]);
 		}
 	}
 	
-	if(childrenCategory==""){ return null; }
-	else { return childrenCategory; }
+	if(subCategory==""){ return null; }
+	else { return subCategory; }
 }
