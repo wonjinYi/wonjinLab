@@ -1,3 +1,9 @@
+// 2020. 07. 23.(목) - 회사 프로젝트의 끝을 달려가는 날.
+// 살면서 짠 코드중에 가장 마음에 안드는 코드이다.
+// 중학교 3학년에 짠 플래시 스크립트가 이것보단 잘짰을거다.
+
+// 더 공부해서 이 창피한 코드를 멋지게 개선하는 사람이 되자
+
 window.addEventListener('DOMContentLoaded', main);
 
 async function main(){
@@ -34,37 +40,49 @@ async function main(){
 	}
 	
 	//html스트링 만들기
+	let str = '';
 	for(let i=0; i<ROOT_CATEGORY_SET.length; i++){
-		makeHtmlString( ROOT_CATEGORY_SET[i] , (data[ROOT_CATEGORY_SET[i]]) );
+		const subCategory = getSubCategory(ASSIGNMENT_TYPE, CATEGORY_KEY, ROOT_CATEGORY_SET[i]);
+		str += makeHtmlString( (data[ROOT_CATEGORY_SET[i]]), ROOT_CATEGORY_SET[i], subCategory );
 	}
 	
 	console.log(data);
-	//TARGET['article'].innerHTML = str;
+	TARGET['article'].innerHTML = str;
 	
 	
 }
 
 
-function makeHtmlString(mainCategory, assignment){
-	let subCategoryLength = (Object.keys(assignment)).length
+function makeHtmlString(assignment, mainCategory, subCategory){
 	// html 구문 만들기
 	let tmp = ''; // 해당 subjectType안에 리스트가 하나라도 있는지 확인하기 위한 초기문자열
 	
 	let str = '';
-	str += 	'<div id="'+mainCategory+'" class="type-container">'
-	str += 		'<h2 class="type">'+mainCategory+'</h2>';
+	str += 	'<div id="'+mainCategory+'" class="main-container">'
+	str += 		'<h2 class="main-category">'+mainCategory+'</h2>';
 	tmp = str;
 	
-	for(let i=0; i<subCategoryLength; i++){
-		if(subCategoryLength!=1){
-			str += '<a class="subTitle">'+assignment
+	for(let i=0; i<subCategory.length; i++){
+		if(subCategory.length != 1){
+			str += 	'<div class="sub-container">';
+			//str += 		'<hr>'
+			str += 		'<a class="sub-category">'+subCategory[i].categoryName+'</a>'
+			//str += 		'<hr>'
+			str += 	'</div>';
 		}
+		
+		
+		let _items = (assignment[subCategory[i].categoryName]).items ;
 		str += 		'<ul>';
-	
-	
-	
-	
-	str += 		'</ul>';
+		for(let k=0; k < _items.length; k++ ){
+			str += '<li class="item-list">';
+			str +=		'<a class="title" href="'+_items[k]['서비스url']+'" target="_blank">'+_items[k]['제목']+'</a>';
+			str += 		' by '+_items[k]['제출자'];
+			
+			if(_items[k]['메모'] != ''){str += ' "'+_items[k]['메모']+'"';}
+			str +=	'</li>';
+		}
+		str += 		'</ul>';
 	}
 	
 	str += 		'</div>';
@@ -111,7 +129,6 @@ function categorizeItems(data, source, CATEGORY_KEY, mainCategory, subCategory  
 			
 		}
 	}
-	
 }
 
 

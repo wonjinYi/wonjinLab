@@ -5,6 +5,28 @@ body {
     color : #636363;
 	margin:0;
 }
+a	{
+	text-decoration : none;
+	color : #ffaa00;
+	font-weight : bolder;
+}
+li{
+	list-style-type : none;
+
+	margin : 10px 0px;
+	
+		border-left-color : #ffaa00;
+	border-left-style : solid;
+	border-left-width : 5px;
+}
+ul{
+	padding : 0px;
+	
+}
+
+/***********************************************************************
+************************************************************************
+*************************************************************************/
 
 header{
 	text-align : center;
@@ -16,46 +38,44 @@ header h1{
 header p a{
 	font-size : 25px;
 }
-
+#sheet-link{
+	padding :0;
+}
+/***********************************************************************
+************************************************************************
+*************************************************************************/
 
 article{
 	display : flex;
 	flex-wrap : wrap;
 }
 
-a	{
-	text-decoration : none;
-	color : #ffaa00;
-	font-weight : bolder;
-}
-li{
-	list-style-type : none;
 
-	margin : 10px 0px;
-}
-ul{
-	padding : 0px;
-	
-}
-
-.type-container{
+.main-container{
 	margin : 20px;
 }
 
-.type{
+.main-category{
 	display : inline-block;
 	background-color : #ffaa00;
 	color : #FFFFFF;
 	padding : 10px;
 	margin-bottom : 0;
 }
-
+.sub-container{
+	
+}
+.sub-category{
+	font-size : 18px;
+	
+	border-bottom-style : solid;
+	border-bottom-width : 2px;
+	border-color : #ffaa00
+}
 .title{
 	font-size : 20px;
 	
-	border-left-color : #ffaa00;
-	border-left-style : solid;
-	border-left-width : 5px;
+
 	
 	padding-left : 10px;
 	
