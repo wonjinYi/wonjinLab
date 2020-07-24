@@ -27,66 +27,69 @@ async function main(){
 	const SUBMITTED_LIST = await separateRowFromJson(SOURCE.submitted, COLUMNS.submitted);
 	const ASSIGNMENT_TYPE = await separateRowFromJson(SOURCE.assignment_type, COLUMNS.assignment_type);
 	
-	console.log(SUBMITTED_LIST);
-	console.log(ASSIGNMENT_TYPE);
+
 	
+	//categorize row-form data(SUBMITTED_LIST, ASSIGNMENT_TYPE), and save on "data" Object.
 	let data = {};
-	
-	//카테고리 구조화
 	const ROOT_CATEGORY_SET = getRootCategory(ASSIGNMENT_TYPE, CATEGORY_KEY);
 	for(let i=0; i<ROOT_CATEGORY_SET.length; i++){
 		const subCategory = getSubCategory(ASSIGNMENT_TYPE, CATEGORY_KEY, ROOT_CATEGORY_SET[i]);
 		categorizeItems(data, SUBMITTED_LIST, CATEGORY_KEY, ROOT_CATEGORY_SET[i], subCategory);
 	}
 	
-	//html스트링 만들기
-	//let str = '<div id="contents">';
+	//Makes a HTML string for displaying contents.
 	let str = '';
 	for(let i=0; i<ROOT_CATEGORY_SET.length; i++){
 		const subCategory = getSubCategory(ASSIGNMENT_TYPE, CATEGORY_KEY, ROOT_CATEGORY_SET[i]);
 		str += makeHtmlString( (data[ROOT_CATEGORY_SET[i]]), ROOT_CATEGORY_SET[i], subCategory );
 	}
-	//str += '</div>';
-	
+
 	TARGET['article'].innerHTML = str;
 	
-	
+	//Add eventListener for main-category(in jjoma:큰유형), sub-category(in jjoma:작은유형)
+	TARGET['article'].addEventListener("click", function(e){
+		try{
+			const mainCategory = e.target.getAttribute('data-main-category');
+			const subCategory = e.target.textContent;
+		
+			const description = data[mainCategory][subCategory].description;
+			console.log(description);
+		}
+		catch(e){
+			console.log('그거아니다');
+		}
+	});
 }
 
 
 function makeHtmlString(assignment, mainCategory, subCategory){
-	// html 구문 만들기
-	let tmp = ''; // 해당 subjectType안에 리스트가 하나라도 있는지 확인하기 위한 초기문자열
-	
 	let str = '';
-	str += 	'<div id="'+mainCategory+'" class="main-container">'
-	str += 		'<h2 class="main-category">'+mainCategory+'</h2>';
-	tmp = str;
+	str += 	'<div id="'+mainCategory+'" class="main-container">';
+	str += 		'<h2 class="main-category" data-main-category="'+mainCategory+'">'+mainCategory+'</h2>';
 	
 	for(let i=0; i<subCategory.length; i++){
-		if(subCategory.length != 1){
-			str += 	'<div class="sub-container">';
-			//str += 		'<hr>'
-			str += 		'<a class="sub-category">'+subCategory[i].categoryName+'</a>'
-			//str += 		'<hr>'
-			str += 	'</div>';
-		}
+		str += 	'<div class="sub-container">';
 		
+		//If there isn't Subcategory, don't show dummy subcategory.
+		if(subCategory[0].categoryName != mainCategory){
+			str += 	'<a class="sub-category" data-main-category="'+mainCategory+'">'+subCategory[i].categoryName+'</a>'
+		}
 		
 		let _items = (assignment[subCategory[i].categoryName]).items ;
 		str += 		'<ul>';
 		for(let k=0; k < _items.length; k++ ){
-			str += '<li class="item-list">';
-			str +=		'<a class="title" href="'+_items[k]['서비스url']+'" target="_blank">'+_items[k]['제목']+'</a>';
-			str += 		' by '+_items[k]['제출자'];
+			str += 		'<li class="item-list">';
+			str +=			'<a class="title" href="'+_items[k]['서비스url']+'" target="_blank">'+_items[k]['제목']+'</a>';
+			str += 			' by '+_items[k]['제출자'];
 			
 			if(_items[k]['메모'] != ''){str += ' "'+_items[k]['메모']+'"';}
-			str +=	'</li>';
+			str +=		'</li>';
 		}
 		str += 		'</ul>';
+		str += 	'</div>';
 	}
-	
-	str += 		'</div>';
+
+	str += 	'</div>';
 
 	return str;
 }
@@ -104,7 +107,6 @@ data = {
 		}
 	}
 }
-
 data.main.sub.item
 예시 ) data.스네이크.게임.item -> 스네이크-게임 카테고리에 속하는 모든 row리턴.
 */
@@ -131,7 +133,6 @@ function categorizeItems(data, source, CATEGORY_KEY, mainCategory, subCategory  
 		}
 	}
 }
-
 
 async function separateRowFromJson(url, columns){
 

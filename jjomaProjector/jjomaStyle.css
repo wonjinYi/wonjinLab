@@ -15,9 +15,7 @@ li{
 
 	margin : 10px 0px;
 	
-		border-left-color : #ffaa00;
-	border-left-style : solid;
-	border-left-width : 5px;
+
 }
 ul{
 	padding : 0px;
@@ -40,7 +38,9 @@ header p a{
 }
 #sheet-link{
 	padding :0;
+	border-width : 0
 }
+
 /***********************************************************************
 ************************************************************************
 *************************************************************************/
@@ -58,29 +58,39 @@ article{
 
 .main-container{
 	margin : 20px;
+
 }
 
 .main-category{
 	display : inline-block;
+	
+
+	padding : 10px;
+	margin-bottom : 10px;
+	
 	background-color : #ffaa00;
 	color : #FFFFFF;
-	padding : 10px;
-	margin-bottom : 0;
-}
-.sub-container{
+	
 	
 }
+.sub-container{
+	margin : 10px 0px;
+}
+
 .sub-category{
 	font-size : 18px;
 	
-	border-bottom-style : solid;
-	border-bottom-width : 2px;
+	padding : 2px 5px;
+	border-style : solid;
+	border-width : 2px;
 	border-color : #ffaa00
 }
 .title{
 	font-size : 20px;
 	
-
+	border-left-color : #ffaa00;
+	border-left-style : solid;
+	border-left-width : 5px;
 	
 	padding-left : 10px;
 	
@@ -91,7 +101,13 @@ article{
 	color : #FFFFFF;
 }
 
+/***********************************************************************
+************************************************************************
+*************************************************************************/
 
+#modal-overay{
+	
+}
 
 @media (max-width:769px){
 
