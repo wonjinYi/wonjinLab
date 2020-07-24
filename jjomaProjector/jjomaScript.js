@@ -8,6 +8,7 @@ window.addEventListener('DOMContentLoaded', main);
 
 async function main(){
 	const TARGET={
+		body : document.querySelector('body'),
 		article : document.getElementById('jjoriping'),
 		modal_container : document.getElementById('modal-container'),
 		modal_text : (document.getElementById('modal-container')).querySelector('.modal-text'),
@@ -58,6 +59,7 @@ async function main(){
 			const description = data[mainCategory][subCategory].description;
 			
 			TARGET['modal_container'].classList.toggle('hidden');
+			TARGET['body'].classList.toggle('modal-open');
 			TARGET['modal_text'].innerText = description;
 			
 			console.log(description);
@@ -69,6 +71,7 @@ async function main(){
 	});
 	TARGET['modal_close'].addEventListener("click", function(e){
 		TARGET['modal_container'].classList.toggle('hidden');
+		TARGET['body'].classList.toggle('modal-open');
 	});
 }
 
