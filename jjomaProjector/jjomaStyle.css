@@ -33,13 +33,35 @@ ul{
 header{
 	text-align : center;
 }
-header h1{
-	font-size : 50px;
-	color : #ffaa00;
-}
 header p a{
 	font-size : 25px;
 }
+#project-title{
+	display : inline-block;
+	font-size : 50px;
+	color : #ffaa00;
+	/*
+	padding : 5px;
+	border-bottom-style : solid;
+	border-bottom-width : 3px;
+	border-color : #FFFFFF;
+	
+	transition : all 1s;
+	*/
+	cursor : url(res/catCursor.png), pointer;
+	
+	
+}
+/*
+#project-title:hover{
+	border-bottom-width : 3px;
+	border-color : #ffaa00;
+}
+*/
+#project-title:hover:after{
+	content : "?";
+}
+
 #sheet-link{
 	padding :0;
 	border-width : 0
@@ -140,7 +162,7 @@ article{
 	
 	width : 100%;
 	height : 100%;
-	background-color : RGBA(0, 0, 0, 0.4);
+	background-color : RGBA(0, 0, 0, 0.6);
 }
 .modal-contents{
 	display:flex;
@@ -155,7 +177,7 @@ article{
 	
 
 	text-align: center;
-	background-color: rgba(255,255,255,0.9);
+	background-color: rgb(255,255,255);
 	border-radius: 6px;
 	box-shadow: 0 10px 20px rgba(0,0,0,0.20), 0 6px 6px rgba(0, 0, 0, 0.20);
 }

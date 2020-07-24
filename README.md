@@ -16,6 +16,7 @@
 
 ### Resources used
 * Experiment Icon by Rank Sol on Iconscout
-* [Running Cat animation](https://dlpng.com/png/1493191) on DLPNG
-* [Cute kawaii cat animation](https://tenor.com/view/cute-kawaii-kitty-cat-transparent-gif-5588862) on Tenor
+* [Running Cat animation](https://dlpng.com/png/1493191) by DLPNG
+* [Cute kawaii cat animation](https://tenor.com/view/cute-kawaii-kitty-cat-transparent-gif-5588862) by Tenor
+* [Cat mouse cursor](https://icons8.com/icon/121407/cat) by Icons8
 ![logo](./res/logo.png)

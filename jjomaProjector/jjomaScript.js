@@ -60,18 +60,24 @@ async function main(){
 			
 			TARGET['modal_container'].classList.toggle('hidden');
 			TARGET['body'].classList.toggle('modal-open');
-			TARGET['modal_text'].innerText = description;
-			
-			console.log(description);
-			
+			TARGET['modal_text'].innerText = description;	
 		}
 		catch(e){
-			console.log('그거아니다');
+			//console.log('그거아니다');
 		}
 	});
 	TARGET['modal_close'].addEventListener("click", function(e){
 		TARGET['modal_container'].classList.toggle('hidden');
 		TARGET['body'].classList.toggle('modal-open');
+	});
+	
+	
+	
+	//CUTE KAWAII CAT!!! CAT!!! Only I don't have cat.... but Others have cat...
+	document.getElementById('project-title').addEventListener('click', (e)=>{
+		TARGET['modal_container'].classList.toggle('hidden');
+		TARGET['body'].classList.toggle('modal-open');
+		TARGET['modal_text'].innerHTML = '<img src="res/cuteKawaiiCat.gif">';
 	});
 }
 
