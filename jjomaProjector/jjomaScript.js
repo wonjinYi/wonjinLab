@@ -40,13 +40,14 @@ async function main(){
 	}
 	
 	//html스트링 만들기
+	//let str = '<div id="contents">';
 	let str = '';
 	for(let i=0; i<ROOT_CATEGORY_SET.length; i++){
 		const subCategory = getSubCategory(ASSIGNMENT_TYPE, CATEGORY_KEY, ROOT_CATEGORY_SET[i]);
 		str += makeHtmlString( (data[ROOT_CATEGORY_SET[i]]), ROOT_CATEGORY_SET[i], subCategory );
 	}
+	//str += '</div>';
 	
-	console.log(data);
 	TARGET['article'].innerHTML = str;
 	
 	

@@ -48,8 +48,13 @@ header p a{
 article{
 	display : flex;
 	flex-wrap : wrap;
+	justify-content : center;
+	
 }
 
+#contents{
+	
+}
 
 .main-container{
 	margin : 20px;
