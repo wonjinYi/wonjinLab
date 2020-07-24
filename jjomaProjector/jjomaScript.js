@@ -8,7 +8,10 @@ window.addEventListener('DOMContentLoaded', main);
 
 async function main(){
 	const TARGET={
-		article : document.getElementById('jjoriping')
+		article : document.getElementById('jjoriping'),
+		modal_container : document.getElementById('modal-container'),
+		modal_text : (document.getElementById('modal-container')).querySelector('.modal-text'),
+		modal_close : (document.getElementById('modal-container')).querySelector('.modal-close')
 	};
 	const SOURCE={
 		submitted : 'https://spreadsheets.google.com/feeds/list/1ZPg6mfEvkzk-8fBvSTfLzNr5CuD5XT9HP2X6FmXbgTU/2/public/full?alt=json',
@@ -53,11 +56,19 @@ async function main(){
 			const subCategory = e.target.textContent;
 		
 			const description = data[mainCategory][subCategory].description;
+			
+			TARGET['modal_container'].classList.toggle('hidden');
+			TARGET['modal_text'].innerText = description;
+			
 			console.log(description);
+			
 		}
 		catch(e){
 			console.log('그거아니다');
 		}
+	});
+	TARGET['modal_close'].addEventListener("click", function(e){
+		TARGET['modal_container'].classList.toggle('hidden');
 	});
 }
 
@@ -71,9 +82,9 @@ function makeHtmlString(assignment, mainCategory, subCategory){
 		str += 	'<div class="sub-container">';
 		
 		//If there isn't Subcategory, don't show dummy subcategory.
-		if(subCategory[0].categoryName != mainCategory){
+		//if(subCategory[0].categoryName != mainCategory){
 			str += 	'<a class="sub-category" data-main-category="'+mainCategory+'">'+subCategory[i].categoryName+'</a>'
-		}
+		//}
 		
 		let _items = (assignment[subCategory[i].categoryName]).items ;
 		str += 		'<ul>';
