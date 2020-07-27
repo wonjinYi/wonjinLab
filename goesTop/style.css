@@ -10,9 +10,26 @@ article{
 }
 
 #card-container{
+	display : flex;
+	align-items : flex-end;
+	justify-content : center;
 	padding : 10px;
 	background-color : #0d6100;
 }
+#YT-container{
+	display : flex;
+	flex-direction : column;
+}
+
+.cards{
+	/*flex : auto; position : relative;*/
+	padding : 20px;
+	
+}
+.dummy{
+	padding-bottom : 105px;	
+}
+
 @media (max-width:769px){
 
 }

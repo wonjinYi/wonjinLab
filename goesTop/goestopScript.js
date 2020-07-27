@@ -30,12 +30,13 @@ function main(){
 	}
 	
 	organizeCards(myCards, drawCard(8), TARGET);
+	updateCardContainer(myCards);
+	
 	console.log(myCards);
 }
 
 
 function organizeCards(myCards, drawn, TARGET){
-	
 	//classitication 
 	for(let i=0; i<drawn.length; i++){
 		for(let key in myCards){
@@ -46,22 +47,36 @@ function organizeCards(myCards, drawn, TARGET){
 		}
 		
 	}
-
-	
-	//make HTML elements by classified cards ( "myCards" Object )
-
-	for(let key in myCards){
-		//console.log(myCards[key].length);
-		let str = '';
-		for(let i=0; i<myCards[key].length; i++){
-			str += '<img src="card_img/'+myCards[key][i]+'.png">';
-		}
-		document.getElementById(key).innerHTML = str;
-	}
-	
 }
 
-function drawCard(num){
+function updateCardContainer(myCards){
+	//make HTML elements by classified cards ( "myCards" Object )
+
+	const overlapSpace = 30;
+	
+	for(let key in myCards){
+		
+		let str = '';
+		for(let i=0; i<myCards[key].length; i++){
+			//str += '<img src="card_img/'+myCards[key][i]+'.png" position>';
+			
+			str += '<img src="card_img/'+myCards[key][i]+'.png" ';
+			str +=		'style="left:-'+(overlapSpace*i)+'px;';
+			str +=				'position:relative;';
+			str +=				'z-index:'+i+';';
+			str +=		'"';
+			str += '>';
+			
+		}
+		
+		
+		// If there are cards in current Class(key), update the Element.
+		if(str!=''){document.getElementById(key).innerHTML = str;}
+		
+	}
+}
+
+function drawCard(num){ // 'draw' means 'select a random card'. NOT DRAWING A PAINT!!!!!
 	let drawnCards = [];
 	
 	for(let i=0; i<num; i++){
