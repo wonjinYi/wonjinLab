@@ -20,8 +20,8 @@ function main(){
 		body : document.getElementsByTagName('body'),
 		card_container : document.getElementById('card-container')
 	};
+	const drawNum = 8;
 	
-
 	let myCards = {
 		G : [],
 		Y : [],
@@ -29,10 +29,19 @@ function main(){
 		P : []
 	}
 	
-	organizeCards(myCards, drawCard(8), TARGET);
+	organizeCards(myCards, drawCard(drawNum), TARGET);
 	updateCardContainer(myCards);
 	
+	//temp button for test -------------------------------------
+	document.getElementById('temp-btn').addEventListener('click',(e)=>{
+		for(let key in myCards){myCards[key] = [];}
+		organizeCards(myCards, drawCard(drawNum), TARGET);
+		updateCardContainer(myCards);
+	});
 	console.log(myCards);
+	//temp button for test -------------------------------------
+	
+
 }
 
 
@@ -55,7 +64,7 @@ function updateCardContainer(myCards){
 	const overlapSpace = 30;
 	
 	for(let key in myCards){
-		
+		let marginValue = 0;
 		let str = '';
 		for(let i=0; i<myCards[key].length; i++){
 			//str += '<img src="card_img/'+myCards[key][i]+'.png" position>';
@@ -63,15 +72,20 @@ function updateCardContainer(myCards){
 			str += '<img src="card_img/'+myCards[key][i]+'.png" ';
 			str +=		'style="left:-'+(overlapSpace*i)+'px;';
 			str +=				'position:relative;';
-			str +=				'z-index:'+i+';';
+		//	str +=				'z-index:'+i+';';
 			str +=		'"';
 			str += '>';
+			
+			marginValue += overlapSpace*i;
 			
 		}
 		
 		
 		// If there are cards in current Class(key), update the Element.
-		if(str!=''){document.getElementById(key).innerHTML = str;}
+		if(str!=''){
+			document.getElementById(key).innerHTML = str;
+			document.getElementById(key).style.width -= (-1)*marginValue + 'px';
+		}
 		
 	}
 }

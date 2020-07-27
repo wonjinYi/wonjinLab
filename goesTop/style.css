@@ -2,11 +2,21 @@
 
 body {
     font-family: 'Nanum Gothic', sans-serif;
-    
+    background-color : #0d6100;
 }
 
 article{
-
+	text-align : center;
+}
+img{
+	top : 0;
+	border : solid 3px rgba(255,255,255,0);
+	transition : all 0.5s;
+}
+img:hover{
+	top : -10px;
+	border-color : rgba(255, 217, 0, 1);
+	z-index : 1001;
 }
 
 #card-container{
@@ -14,7 +24,7 @@ article{
 	align-items : flex-end;
 	justify-content : center;
 	padding : 10px;
-	background-color : #0d6100;
+	
 }
 #YT-container{
 	display : flex;
