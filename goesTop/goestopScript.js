@@ -20,7 +20,7 @@ function main(){
 		body : document.getElementsByTagName('body'),
 		card_container : document.getElementById('card-container')
 	};
-	const drawNum = 8;
+	const drawNum = 30;
 	
 	let myCards = {
 		G : [],
@@ -76,7 +76,7 @@ function updateCardContainer(myCards){
 			str +=		'"';
 			str += '>';
 			
-			marginValue += overlapSpace*i;
+			//marginValue += overlapSpace;
 			
 		}
 		
@@ -84,7 +84,8 @@ function updateCardContainer(myCards){
 		// If there are cards in current Class(key), update the Element.
 		if(str!=''){
 			document.getElementById(key).innerHTML = str;
-			document.getElementById(key).style.width -= (-1)*marginValue + 'px';
+			document.getElementById(key).style.marginRight = ((-1)*(myCards[key].length-1)*overlapSpace) + 'px';
+			console.log('mar : ' + document.getElementById(key).style.marginRight);
 		}
 		
 	}
@@ -106,4 +107,12 @@ function drawCard(num){ // 'draw' means 'select a random card'. NOT DRAWING A PA
 	return drawnCards;
 }
 
+function range(start, end){
+	let arr=[];
+	for(let i=start; i<end; i++){
+		arr.push(i);
+	}
+	
+	return arr;
+}
 

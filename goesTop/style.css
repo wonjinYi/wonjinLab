@@ -1,12 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap');
 
+#temp-div{
+	text-align : center;
+}
+
 body {
     font-family: 'Nanum Gothic', sans-serif;
     background-color : #0d6100;
 }
 
 article{
-	text-align : center;
+	
 }
 img{
 	top : 0;
