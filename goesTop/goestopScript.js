@@ -38,8 +38,9 @@ function main(){
 		console.log(drawNum);
 		for(let key in myCards){myCards[key] = [];}
 		organizeCards(myCards, drawCard(drawNum), TARGET);
-		console.log(myCards);
+		
 		updateCardContainer(myCards);
+		console.log(myCards);
 	});
 		//console.log(myCards);
 	//temp button for test -------------------------------------
@@ -96,6 +97,9 @@ function updateCardContainer(myCards){
 			document.getElementById(key).innerHTML = str;
 			document.getElementById(key).style.marginRight = ((-1)*(myCards[key].length-1)*OVERLAP_SPACE) + 'px';
 			//console.log('mar : ' + document.getElementById(key).style.marginRight);
+		}
+		else{
+			document.getElementById(key).innerHTML = '<div class="dummy"></div>';
 		}
 		
 	}

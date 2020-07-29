@@ -11,6 +11,9 @@
 	border : 2px solid #0d6100;
 	border-radius : 20px;
 }
+#temp-img:click{
+	border-radius : 100px;
+}
 #temp-input{
 	line-height : 30px;
 	font-size : 30px;
@@ -60,11 +63,11 @@ img:hover{
 	display : flex;
 	flex-direction : column;
 	flex-wrap : wrap;
-	
+	padding : 20px;
 	
 }
 .cards-line{
-	padding : 20px;
+	
 }
 .dummy{
 	padding-bottom : 105px;	
