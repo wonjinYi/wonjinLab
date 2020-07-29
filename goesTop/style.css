@@ -1,12 +1,30 @@
 @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap');
 
+/* for test */
 #temp-div{
 	text-align : center;
 }
+#temp-img{
+	width : 150px;
+	height : auto;
+	
+	border : 2px solid #0d6100;
+	border-radius : 20px;
+}
+#temp-input{
+	line-height : 30px;
+	font-size : 30px;
+	width : 120px;
+}
+/* for test */
+
+
 
 body {
     font-family: 'Nanum Gothic', sans-serif;
     background-color : #0d6100;
+	
+	overflow-x: hidden;
 }
 
 article{
@@ -27,6 +45,8 @@ img:hover{
 	display : flex;
 	align-items : flex-end;
 	justify-content : center;
+	
+	flex-wrap : wrap;
 	padding : 10px;
 	
 }
@@ -37,8 +57,14 @@ img:hover{
 
 .cards{
 	/*flex : auto; position : relative;*/
-	padding : 20px;
+	display : flex;
+	flex-direction : column;
+	flex-wrap : wrap;
 	
+	
+}
+.cards-line{
+	padding : 20px;
 }
 .dummy{
 	padding-bottom : 105px;	

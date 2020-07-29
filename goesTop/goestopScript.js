@@ -20,7 +20,7 @@ function main(){
 		body : document.getElementsByTagName('body'),
 		card_container : document.getElementById('card-container')
 	};
-	const drawNum = 30;
+	let drawNum = 10;
 	
 	let myCards = {
 		G : [],
@@ -34,11 +34,14 @@ function main(){
 	
 	//temp button for test -------------------------------------
 	document.getElementById('temp-btn').addEventListener('click',(e)=>{
+		drawNum = parseInt(document.getElementById('temp-input').value);
+		console.log(drawNum);
 		for(let key in myCards){myCards[key] = [];}
 		organizeCards(myCards, drawCard(drawNum), TARGET);
+		console.log(myCards);
 		updateCardContainer(myCards);
 	});
-	console.log(myCards);
+		//console.log(myCards);
 	//temp button for test -------------------------------------
 	
 
@@ -60,23 +63,30 @@ function organizeCards(myCards, drawn, TARGET){
 
 function updateCardContainer(myCards){
 	//make HTML elements by classified cards ( "myCards" Object )
-
-	const overlapSpace = 30;
+	const LINE_BREAK_NUM = 10
+	const OVERLAP_SPACE = 30;
 	
 	for(let key in myCards){
-		let marginValue = 0;
+		
 		let str = '';
 		for(let i=0; i<myCards[key].length; i++){
-			//str += '<img src="card_img/'+myCards[key][i]+'.png" position>';
+			const rest = i%LINE_BREAK_NUM;
+			
+			if(rest == 0){str += '<div class="cards-line">';}
 			
 			str += '<img src="card_img/'+myCards[key][i]+'.png" ';
-			str +=		'style="left:-'+(overlapSpace*i)+'px;';
+			str +=		'style="left:-'+(OVERLAP_SPACE* (i%LINE_BREAK_NUM) )+'px;';
 			str +=				'position:relative;';
-		//	str +=				'z-index:'+i+';';
 			str +=		'"';
 			str += '>';
 			
-			//marginValue += overlapSpace;
+			if(rest == 9){str += '</div>';}
+			else if (i==myCards[key].lenth-1){str += '</div>';}
+			/*	
+			0	1	2	3	4	5	6	7	8	9
+			10	11	12	13	14	15	16	17	18	19
+			20	21	22	23	24	25	26	27	28	29
+			*/
 			
 		}
 		
@@ -84,8 +94,8 @@ function updateCardContainer(myCards){
 		// If there are cards in current Class(key), update the Element.
 		if(str!=''){
 			document.getElementById(key).innerHTML = str;
-			document.getElementById(key).style.marginRight = ((-1)*(myCards[key].length-1)*overlapSpace) + 'px';
-			console.log('mar : ' + document.getElementById(key).style.marginRight);
+			document.getElementById(key).style.marginRight = ((-1)*(myCards[key].length-1)*OVERLAP_SPACE) + 'px';
+			//console.log('mar : ' + document.getElementById(key).style.marginRight);
 		}
 		
 	}
