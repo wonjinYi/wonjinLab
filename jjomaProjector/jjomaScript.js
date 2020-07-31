@@ -102,7 +102,7 @@ function makeHtmlString(assignment, mainCategory, subCategory){
 			str +=			'<a class="title" href="'+_items[k]['서비스url']+'" target="_blank">'+_items[k]['제목']+'</a>';
 			str += 			' by '+_items[k]['제출자'];
 			
-			if(_items[k]['메모'] != ''){str += ' "'+_items[k]['메모']+'"';}
+			if(_items[k]['메모'] != ''){str += '<p class="memo"> "'+_items[k]['메모']+'"</p>';}
 			str +=		'</li>';
 		}
 		str += 		'</ul>';
