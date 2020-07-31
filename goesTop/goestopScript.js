@@ -76,6 +76,7 @@ function updateCardContainer(myCards){
 			if(rest == 0){str += '<div class="cards-line">';}
 			
 			str += '<img src="card_img/'+myCards[key][i]+'.png" ';
+			str += 		'class="card" ';
 			str +=		'style="left:-'+(OVERLAP_SPACE* (i%LINE_BREAK_NUM) )+'px;';
 			str +=				'position:relative;';
 			str +=		'"';
@@ -94,9 +95,16 @@ function updateCardContainer(myCards){
 		
 		// If there are cards in current Class(key), update the Element.
 		if(str!=''){
+			let _margin = 0;
+			
+			// set negative margin of .cards class.
+			// If there were line breaking, these margin is max value ( = LINE_BREAK_NUM * OVERLAP_SPACE )
+			// BUT, there were not that, margin is determined by the number of element(card)
+			if(myCards[key].length >= LINE_BREAK_NUM){_margin = (-1) * LINE_BREAK_NUM * OVERLAP_SPACE;}
+			else {_margin = (-1) * ( (myCards[key].length)%LINE_BREAK_NUM ) * OVERLAP_SPACE; }
+			
 			document.getElementById(key).innerHTML = str;
-			document.getElementById(key).style.marginRight = ((-1)*(myCards[key].length-1)*OVERLAP_SPACE) + 'px';
-			//console.log('mar : ' + document.getElementById(key).style.marginRight);
+			document.getElementById(key).style.marginRight = _margin + 'px';
 		}
 		else{
 			document.getElementById(key).innerHTML = '<div class="dummy"></div>';
