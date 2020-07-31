@@ -219,6 +219,9 @@ article{
 	article {
 		justify-content : flex-start;
 	}
+	.main-container{
+		max-width : 95%;
+	}
 	.modal-contents{
 			padding: 20px 10px;
 			max-width : 90%;
