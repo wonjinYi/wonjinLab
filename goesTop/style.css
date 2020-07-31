@@ -71,7 +71,8 @@ img:hover{
 	height : auto;
 }
 .cards-line{
-	
+	position : relative;
+	top : 0;
 }
 .dummy{
 	padding-bottom : 105px;	

@@ -65,7 +65,7 @@ function organizeCards(myCards, drawn, TARGET){
 function updateCardContainer(myCards){
 	//make HTML elements by classified cards ( "myCards" Object )
 	const LINE_BREAK_NUM = 10
-	const OVERLAP_SPACE = 30;
+	const OVERLAP_SPACE = {horizon:30, vertical:40};
 	
 	for(let key in myCards){
 		
@@ -77,7 +77,7 @@ function updateCardContainer(myCards){
 			
 			str += '<img src="card_img/'+myCards[key][i]+'.png" ';
 			str += 		'class="card" ';
-			str +=		'style="left:-'+(OVERLAP_SPACE* (i%LINE_BREAK_NUM) )+'px;';
+			str +=		'style="left:-'+(OVERLAP_SPACE.horizon* (i%LINE_BREAK_NUM) )+'px;';
 			str +=				'position:relative;';
 			str +=		'"';
 			str += '>';
@@ -95,19 +95,30 @@ function updateCardContainer(myCards){
 		
 		// If there are cards in current Class(key), update the Element.
 		if(str!=''){
-			let _margin = 0;
+			let _marginRight = 0;
 			
 			// set negative margin of .cards class.
 			// If there were line breaking, these margin is max value ( = LINE_BREAK_NUM * OVERLAP_SPACE )
 			// BUT, there were not that, margin is determined by the number of element(card)
-			if(myCards[key].length >= LINE_BREAK_NUM){_margin = (-1) * LINE_BREAK_NUM * OVERLAP_SPACE;}
-			else {_margin = (-1) * ( (myCards[key].length)%LINE_BREAK_NUM ) * OVERLAP_SPACE; }
+			if(myCards[key].length >= LINE_BREAK_NUM){_marginRight = (-1) * LINE_BREAK_NUM * OVERLAP_SPACE.horizon;}
+			else {_marginRight = (-1) * ( (myCards[key].length)%LINE_BREAK_NUM ) * OVERLAP_SPACE.horizon; }
 			
 			document.getElementById(key).innerHTML = str;
-			document.getElementById(key).style.marginRight = _margin + 'px';
+			document.getElementById(key).style.marginRight = _marginRight + 'px';
 		}
 		else{
 			document.getElementById(key).innerHTML = '<div class="dummy"></div>';
+		}
+		
+		// If there were line Breaking, overlap .card-line element vertically
+		if(myCards[key].length>LINE_BREAK_NUM){
+			const CARDS_LINE = ( document.getElementById(key) ).getElementsByTagName('div');
+			//console.log(CARDS_LINE);
+			for(let i=0; i<CARDS_LINE.length - 1; i++ ){
+				CARDS_LINE[i].style.top = ( (CARDS_LINE.length - 1 - i) * OVERLAP_SPACE.vertical ) + 'px';
+				//console.log("hi",i,CARDS_LINE[i].style.top);
+			}
+			//document.getElementById(key).style.marginTop -= (CARDS_LINE.length - 1) * OVERLAP_SPACE.vertical;
 		}
 		
 	}
