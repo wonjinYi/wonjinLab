@@ -5,6 +5,12 @@ body {
 
 }
 
+div {
+	border : 1px solid grey;
+	margin : 5px;
+	padding : 5px;
+}
+
 @media (max-width:769px){
 
 	
