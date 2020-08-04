@@ -15,7 +15,7 @@
 * [GoesTop](https://lab.wonj.in/GoesTop/) : GoStop web game the Korea traditional board game (jjoma assignment 3)
 
 ### Resources used
-* Experiment Icon by Rank Sol on Iconscout
+* [Experiment Icon](https://iconscout.com/icons/experiment) by [Rank Sol](https://iconscout.com/contributors/promotion-king) on [Iconscout](https://iconscout.com)
 * [Running Cat animation](https://dlpng.com/png/1493191) by DLPNG
 * [Cute kawaii cat animation](https://tenor.com/view/cute-kawaii-kitty-cat-transparent-gif-5588862) by Tenor
 * [Cat mouse cursor](https://icons8.com/icon/121407/cat) by Icons8  
