@@ -29,7 +29,7 @@ function main(){
 	const INITIAL_UPDATE_INTERVAL = 300;
 	const RANK_SIZE = 10;
 	
-	//ranking data that contains highest 10 scores
+	//ranking data ( contains highest 10 scores )
 	let rank = []
 	let rankExist = localStorage.getItem('rankExist');
 	if(rankExist == null){
@@ -54,15 +54,19 @@ function main(){
 		}	
 	};
 	let Field = {
-		// 0 : 빈 공간 ( element class 없음 )
-		// 1 : 뱀 머리 ( element class : snakehead )
-		// 2 : 뱀 몸통 ( element class : snakebody )
-		// 3 : 먹이 ( element class : food )
-		view : [],
+
+		view : [], 	// virtual view used on back
+					// 0 : empty space ( have no element class )
+					// 1 : snake head ( element class : snakehead )
+					// 2 : snake body ( element class : snakebody )
+					// 3 : food ( element class : food )
 		
-		initView : function(FIELD_SIZE){
-			// view를 FIELD_SIZE에 따라 2차원 배열로 구성
-			// 모든 셀은 0 (빈 공간)으로 초기화
+		DOMtable : [],	// REAL Field table on DOM
+		
+		
+		initView(FIELD_SIZE, TARGET){
+			// set 2-dim array 'view[]', by FIELD_SIZE
+			// All cells are initialized 0 (means empty space)
 			for(let i=0; i<FIELD_SIZE.height; i++){
 				let tmp = new Array(FIELD_SIZE.width);
 				for(let k=0; k<tmp.length; k++){
@@ -70,29 +74,16 @@ function main(){
 				}
 				
 				this.view.push(tmp);
+			}			
+		},
+		initDOMtable(FIELD_SIZE, TARGET){
+			const row = TARGET.getElementsByTagName('tr');
+			for(let i=0; i<FIELD_SIZE.height; i++){
+				this.DOMtable.push(row[i].children);
 			}
 		},
-		updateView : function(FIELD_SIZE, snakePos, foodPos){
-				// 모든 셀을 0으로 초기화
-				for(let i=0; i<FIELD_SIZE.height; i++){
-					for(let k=0; k<FIELD_SIZE.width; k++){
-						this.view[i][k] = 0;
-					}
-				}
-
-				// 먹이 위치 표시
-				this.view[foodPos.row][foodPos.col] = 3;
-			
-				// 뱀의 위치 표시
-				this.view[snakePos[0].row][snakePos[0].col] = 1
-				for(let i=1; i<snakePos.length; i++){
-					this.view[snakePos[i].row][snakePos[i].col] = 2;
-				}
-
-				
 		
-		},
-		drawView : function(FIELD_SIZE, target){
+		createTableOnDOM(FIELD_SIZE, target){
 			let str = '';
 			
 			str+='<table id="field"><tbody>';
@@ -103,12 +94,46 @@ function main(){
 					else if(this.view[i][k] == 1){ str+='<td class="snakehead"></td>';}
 					else if(this.view[i][k] == 2){ str+='<td class="snakebody"></td>';}
 					else if(this.view[i][k] == 3){ str+='<td class="food"></td>';}
-					else { console.log("======== "+i+" , "+k+" : 필드그리기 실패 ========"); }
+					else { console.log("======== "+i+" , "+k+" : Fail to create Table ========"); }
 				}
 				str+='</tr>';
 			}
 			str+='</tbody></table><p>Press LEFT or Right ( [LEFT]:normal [RIGHT]:hardcore )</p>';
 			target.innerHTML = str;
+			
+		},
+		updateView(FIELD_SIZE, snakePos, foodPos){
+			// Set All cells "0"
+			for(let i=0; i<FIELD_SIZE.height; i++){
+				for(let k=0; k<FIELD_SIZE.width; k++){
+					this.view[i][k] = 0;
+				}
+			}
+
+			// record food position , on view
+			this.view[foodPos.row][foodPos.col] = 3;
+
+			// record snake position , on view
+			this.view[snakePos[0].row][snakePos[0].col] = 1
+			for(let i=1; i<snakePos.length; i++){
+				this.view[snakePos[i].row][snakePos[i].col] = 2;
+			}
+		},
+		drawView(FIELD_SIZE, target){
+			let cell;
+			for(let i=0; i<FIELD_SIZE.height; i++){
+				for(let k=0; k<FIELD_SIZE.width; k++){
+					cell = this.DOMtable[i][k];
+					
+					cell.removeAttribute("class");
+					
+					if(this.view[i][k] == 0){ }
+					else if(this.view[i][k] == 1){ cell.classList.add('snakehead');}
+					else if(this.view[i][k] == 2){ cell.classList.add('snakebody');}
+					else if(this.view[i][k] == 3){ cell.classList.add('food');}
+					else { console.log("======== "+i+" , "+k+" : Fail to draw Field ========"); }
+				}
+			}
 		}
 	};
 
@@ -213,9 +238,8 @@ function main(){
 
 	
 	// eventListener to start game & select difficulty
-	
 		// keyboard event (for PC browser)
-	document.addEventListener('keydown', (e)=>{
+	window.addEventListener('keydown', function(e){
 		if(e.keyCode == 37 || e.keyCode == 39){
 			let mode = '';
 			if(e.keyCode == 37 ){ mode = 'normal'; }
@@ -225,9 +249,8 @@ function main(){
 			this.removeEventListener("keydown",arguments.callee);
 		}
 	});
-	
 		// Arrow Button TouchEvent( for Mobile browser )
-	TARGET.onscreen_keyboard.addEventListener('mousedown', (e)=>{
+	TARGET.onscreen_keyboard.addEventListener('mousedown', function(e){
 		if(e.target == TARGET.left_key || e.target == TARGET.right_key){
 			let mode = '';
 			if(e.target == TARGET.left_key){ mode = 'normal'; }
@@ -250,8 +273,12 @@ function initialSetting(FIELD_SIZE, TARGET, Snake, Food, Field){
 	Snake.initPosition(FIELD_SIZE);
 	Food.feed(FIELD_SIZE, Snake.position);
 	Snake.updatePosition();
-	Field.initView(FIELD_SIZE)
+	
+	Field.initView(FIELD_SIZE, TARGET.field)
 	Field.updateView(FIELD_SIZE, Snake.position, Food.position);
+	Field.createTableOnDOM(FIELD_SIZE, TARGET.field)
+	Field.initDOMtable(FIELD_SIZE, TARGET.field)
+	
 	Field.drawView(FIELD_SIZE, TARGET.field);
 }
 
@@ -272,52 +299,13 @@ function setLoop(FIELD_SIZE, TARGET, Snake, Food, Field, Score, mode, updateInte
 		});
 	});
 
+	
 	// SET game Main Loop
 	let intervalId = setInterval(function(){
 		Snake.updatePosition();
 		
-		let gameover = detectCollision(Snake, Food, FIELD_SIZE,intervalId);
-		if(gameover == true){
-			clearInterval(intervalId);
-			alert('\n======== SCORE : '+Snake.length+' ========\n');
-			
-			let isRanker = checkRanker(rank, Snake.length);
-			
-			if(isRanker == false){
-				alert('You do not deserve to enter the abyss. GET OUT FROM HERE');
-				location.replace("index.html");
-			}
-			else{
-				alert('Well done, but not enough.');
-				
-				let str= '';
-				str += 	'<div id="rank_submit">';
-				str += 		'<h2>YOU ARE THE RANKER</h2>';
-				str += 		'<p><strong>Score : '+Snake.length+'</strong></p>';
-				str += 		'<p>Submit your name if you want to be a ranker</p>';
-				str +=		'<div>';
-				str +=			'<input type="text" id="name_input" placeholder="Write your name" name="rankname"></input>';
-				str += 			'<a id="submit_btn">Submit</a>';
-				str +=		'</div>';
-				str +=	'</div>';
-				
-				TARGET.article.innerHTML = str;
-				document.getElementById('submit_btn').addEventListener("click",function(e){
-					let target = document.getElementById('name_input');
-					
-					if( (target.value).includes(' ') == false && target.value!=''){
-						writeRank(rank, Snake, target.value);
-						location.replace("index.html");
-					}
-					else {
-						alert("There is no text, or contains space. Space is not allowed");
-					}
-					
-				});
-				
-			}
-			
-		}
+		const gameover = detectCollision(Snake, Food, FIELD_SIZE,intervalId);
+		if(gameover){ closeGame(intervalId, Snake.length, rank, TARGET); }
 		
 		Food.feed(FIELD_SIZE, Snake.position);
 		Field.updateView(FIELD_SIZE, Snake.position, Food.position);
@@ -328,6 +316,52 @@ function setLoop(FIELD_SIZE, TARGET, Snake, Food, Field, Score, mode, updateInte
 	return intervalId;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+function closeGame(intervalId, score, rank, TARGET){
+
+	clearInterval(intervalId);
+	alert('\n======== SCORE : '+score+' ========\n');
+
+	let isRanker = checkRanker(rank, score);
+
+	if(isRanker == false){
+		alert('You do not deserve to enter the abyss. GET OUT FROM HERE');
+		location.replace("index.html");
+	}
+	else{
+		alert('Not enough, but well done');
+
+		// set rank submit page
+		let str= '';
+		str += 	'<div id="rank_submit">';
+		str += 		'<h2>YOU ARE THE RANKER</h2>';
+		str += 		'<p><strong>Score : '+score+'</strong></p>';
+		str += 		'<p>Submit your name if you want to be a ranker</p>';
+		str +=		'<div>';
+		str +=			'<input type="text" id="name_input" placeholder="Write your name" name="rankname"></input>';
+		str += 			'<a id="submit_btn">Submit</a>';
+		str +=		'</div>';
+		str +=	'</div>';
+
+		TARGET.article.innerHTML = str;
+
+		// submit button add click eventlistener
+		document.getElementById('submit_btn').addEventListener("click",function(e){
+			let target = document.getElementById('name_input');
+
+			if( (target.value).includes(' ') == false && target.value!=''){
+				writeRank(rank, score, target.value);
+				location.replace("index.html");
+			}
+			else {
+				alert("There is no text, or contains space. Space is not allowed");
+			}
+		});
+	}
+}
 
 function detectCollision(Snake, Food, FIELD_SIZE,intervalId){
 		
@@ -355,7 +389,6 @@ function detectCollision(Snake, Food, FIELD_SIZE,intervalId){
 		}
 	}
 	
-	
 	return _gameover;
 }
 
@@ -367,14 +400,14 @@ function checkRanker(rank,snakeLength){
 	return false;
 }
 
-function writeRank(rank, Snake, _name){
+function writeRank(rank, _score , _name){
 	let date = new Date();
 	let currentTime = '';
 	currentTime = date.getDate()+'.'+(date.getMonth()+1)+'.'+(date.getFullYear())+' '+date.getHours()+':'+date.getMinutes();
 	
 	for(let i=0; i<rank.length; i++){
-		if( Snake.length >= rank[i]['score'] ){
-			rank.splice(i, 0, {name:_name, score:Snake.length, time:currentTime});
+		if( _score >= rank[i]['score'] ){
+			rank.splice(i, 0, {name:_name, score:_score, time:currentTime});
 			rank.pop();
 			localStorage.setItem('rank', JSON.stringify(rank));
 			alert('Your score is saved succesfully');
@@ -390,6 +423,7 @@ function isSamePos(snakeHead, food){	// Check if two positions have the same val
 	}
 	return false;
 }
+
 
 function hiDeveloper(){
 	console.log("아 lnx적분하고싶다");
