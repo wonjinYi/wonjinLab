@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", main);
 
 function main(){
 	
-	//그냥 콘솔에 환영메시지 띄워주는 함수임. 쓸모없음.
+	//hi developer!!
 	hiDeveloper();
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////
@@ -43,9 +43,6 @@ function main(){
 		rank = JSON.parse( localStorage.getItem('rank') );
 	}
 	
-	console.log(rankExist);
-	
-	//localStorage.clear();
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////
@@ -208,43 +205,47 @@ function main(){
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	
-	//let gameover = false; // true : 게임오버됨 , false : 게임 진행중
 	let updateInterval = INITIAL_UPDATE_INTERVAL;
 	let intervalId = 0;
 	
-	// 게임 정보 및 화면 최초세팅
+	// Set initial Game info & Field
 	initialSetting(FIELD_SIZE, TARGET, Snake, Food, Field);
 
 	
-	// 좌우 화살표가 눌리면 각 모드에 적합하게 루프 시작
-	window.addEventListener('keydown', function(e){
+	// eventListener to start game & select difficulty
+	
+		// keyboard event (for PC browser)
+	document.addEventListener('keydown', (e)=>{
 		if(e.keyCode == 37 || e.keyCode == 39){
-			intervalId = setLoop(FIELD_SIZE, TARGET, Snake, Food, Field, Score, e.keyCode, updateInterval, rank);
+			let mode = '';
+			if(e.keyCode == 37 ){ mode = 'normal'; }
+			else if(e.keyCode == 39 ){ mode = 'hardcore'; }
+
+			intervalId = setLoop(FIELD_SIZE, TARGET, Snake, Food, Field, Score, mode, updateInterval, rank);
 			this.removeEventListener("keydown",arguments.callee);
 		}
-		
 	});
 	
-	TARGET.onscreen_keyboard.addEventListener('mousedown', function(e){
-		if(e.target == TARGET.left_key){
-			intervalId = setLoop(FIELD_SIZE, TARGET, Snake, Food, Field, Score, 37, updateInterval, rank);
+		// Arrow Button TouchEvent( for Mobile browser )
+	TARGET.onscreen_keyboard.addEventListener('mousedown', (e)=>{
+		if(e.target == TARGET.left_key || e.target == TARGET.right_key){
+			let mode = '';
+			if(e.target == TARGET.left_key){ mode = 'normal'; }
+			else if(e.target == TARGET.right_key){ mode = 'hardcore'; }
+
+			intervalId = setLoop(FIELD_SIZE, TARGET, Snake, Food, Field, Score, mode, updateInterval, rank);
 			this.removeEventListener("mousedown",arguments.callee);
 		}
-		else if(e.target == TARGET.right_key){
-			intervalId = setLoop(FIELD_SIZE, TARGET, Snake, Food, Field, Score, 39, updateInterval, rank);
-			this.removeEventListener("mousedown",arguments.callee);
-		}
-		
 	});
 
 	
 }
 
-	//////////////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
 
-	//게임환경 초기 설정
+//set initial game environment
 function initialSetting(FIELD_SIZE, TARGET, Snake, Food, Field){
 	Snake.initPosition(FIELD_SIZE);
 	Food.feed(FIELD_SIZE, Snake.position);
@@ -254,23 +255,24 @@ function initialSetting(FIELD_SIZE, TARGET, Snake, Food, Field){
 	Field.drawView(FIELD_SIZE, TARGET.field);
 }
 
-function setLoop(FIELD_SIZE, TARGET, Snake, Food, Field, Score, keycode, updateInterval, rank){
+function setLoop(FIELD_SIZE, TARGET, Snake, Food, Field, Score, mode, updateInterval, rank){
+	//set hard mode
+	if(mode == 'hardcore'){ updateInterval -= 200; }
 	
-	if(keycode == 39){ updateInterval -= 200; }
-	
-	//키입력 받기
-	window.addEventListener('keydown', function (e){
+	//addEventListener that reads key input
+		// keyboard event (for PC browser)
+	window.addEventListener('keydown', (e)=>{
 		if(Snake.activateKeydown==true){ Snake.turn(e.keyCode); }
-	});
-
+	}); 
+		// Arrow Button Event( for Mobile browser )
 	Array.from(document.querySelectorAll('.key')).forEach((node) => {
-		node.addEventListener('touchstart', () => {
+		node.addEventListener('mousedown', (e) => {
 			const keyCode = parseInt(node.getAttribute('data-keycode'), 10);
 			if(Snake.activateKeydown==true){ Snake.turn(keyCode); }
 		});
 	});
 
-	//그 외 게임 메인루프 설정
+	// SET game Main Loop
 	let intervalId = setInterval(function(){
 		Snake.updatePosition();
 		
@@ -330,34 +332,34 @@ function setLoop(FIELD_SIZE, TARGET, Snake, Food, Field, Score, keycode, updateI
 function detectCollision(Snake, Food, FIELD_SIZE,intervalId){
 		
 	let snakeHead = Snake.position[0];
-	let gameover = false; // true 게임종료 , false 계속
+	let _gameover = false; // true : shutdown game , false : keep going game
 
-	//먹이와 충돌 -> 먹이 없애고, 뱀 길이 1 신장
+	//When Snake head hit the Food -> remove Food on gameField, Snake length increased by 1
 	if(isSamePos(snakeHead, Food.position)){
 		Food.isExist = false;
 		Snake.lengthen();
 	}
 	
-	//벽과 충돌 -> 게임오버
+	//When Snake head hit the wall -> gameover
 	if(snakeHead.row<0 || snakeHead.row>FIELD_SIZE.height-1 || snakeHead.col<0 || snakeHead.col>FIELD_SIZE.width-1){
-		gameover = true;
+		_gameover = true;
 	}
 
-	//자기 몸과 충돌 -> 게임오버
-	if(gameover == false){
+	//When Snake head hit its body -> gameover
+	if(_gameover == false){
 		for(let i=1; i<Snake.length ; i++){
 			if(isSamePos(snakeHead, Snake.position[i])){
-				gameover = true;
+				_gameover = true;
 				break;
 			}
 		}
 	}
 	
 	
-	return gameover;
+	return _gameover;
 }
 
-//순위권 안에 있는지 확인.
+//Check user is in TOP10 score
 function checkRanker(rank,snakeLength){
 	if(rank[rank.length-1]['score'] <= snakeLength){
 		return true;
@@ -381,8 +383,8 @@ function writeRank(rank, Snake, _name){
 	}
 }
 
-function isSamePos(snakeHead, food){	// 두 position의 값이 같은지 확인. 
-										// 리턴값 true : 같다(겹친다), false : 다르다(안겹친다)
+function isSamePos(snakeHead, food){	// Check if two positions have the same value
+										// return ---- true : same(overlap), false : different(no overlap)
 	if(snakeHead.row == food.row && snakeHead.col == food.col){
 		return true;
 	}
