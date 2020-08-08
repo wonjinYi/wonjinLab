@@ -42,7 +42,6 @@ function main(){
 		updateCardContainer(myCards);
 		console.log(myCards);
 	});
-		//console.log(myCards);
 	//temp button for test -------------------------------------
 	
 
@@ -58,7 +57,6 @@ function organizeCards(myCards, drawn, TARGET){
 				break;
 			}
 		}
-		
 	}
 }
 
@@ -84,12 +82,6 @@ function updateCardContainer(myCards){
 			
 			if(rest == 9){str += '</div>';}
 			else if (i==myCards[key].lenth-1){str += '</div>';}
-			/*	
-			0	1	2	3	4	5	6	7	8	9
-			10	11	12	13	14	15	16	17	18	19
-			20	21	22	23	24	25	26	27	28	29
-			*/
-			
 		}
 		
 		
@@ -113,12 +105,10 @@ function updateCardContainer(myCards){
 		// If there were line Breaking, overlap .card-line element vertically
 		if(myCards[key].length>LINE_BREAK_NUM){
 			const CARDS_LINE = ( document.getElementById(key) ).getElementsByTagName('div');
-			//console.log(CARDS_LINE);
+
 			for(let i=0; i<CARDS_LINE.length - 1; i++ ){
 				CARDS_LINE[i].style.top = ( (CARDS_LINE.length - 1 - i) * OVERLAP_SPACE.vertical ) + 'px';
-				//console.log("hi",i,CARDS_LINE[i].style.top);
 			}
-			//document.getElementById(key).style.marginTop -= (CARDS_LINE.length - 1) * OVERLAP_SPACE.vertical;
 		}
 		
 	}
