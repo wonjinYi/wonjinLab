@@ -42,7 +42,7 @@ async function main(){
 	
 	//joke.
 	for(let i=0; i<TARGET.cell.length; i++){
-		TARGET.cell[i].addEventListener('click', (e)=>{alert(`${needRepayment}`원의 상환이 필요합니다. 상환 문의 이원진)});
+		TARGET.cell[i].addEventListener('click', (e)=>{alert(`${needRepayment}원의 상환이 필요합니다. 상환 문의 이원진`)});
 	}
 	
 
