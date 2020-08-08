@@ -13,6 +13,7 @@
 * [Abyssal Snake](https://lab.wonj.in/AbyssalSnake/) : snake game (jjoma assignment 2)
 * [JJOMA Projector](https://lab.wonj.in/jjomaProjector/) : show assignments written by students of Jjoriping hacking training school
 * [GoesTop](https://lab.wonj.in/GoesTop/) : GoStop web game the Korea traditional board game (jjoma assignment 3)
+* [BitterFear](https://lab.wonj.in/BitterFear/) : If you don't want to suffer the bitter taste of fear, pay back on time
 
 ### Resources used
 * [Experiment Icon](https://iconscout.com/icons/experiment) by [Rank Sol](https://iconscout.com/contributors/promotion-king) on [Iconscout](https://iconscout.com) - main page
