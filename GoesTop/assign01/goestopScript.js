@@ -73,7 +73,7 @@ function updateCardContainer(myCards){
 			
 			if(rest == 0){str += '<div class="cards-line">';}
 			
-			str += '<img src="card_img/'+myCards[key][i]+'.png" ';
+			str += '<img src="../card_img/'+myCards[key][i]+'.png" ';
 			str += 		'class="card" ';
 			str +=		'style="left:-'+(OVERLAP_SPACE.horizon* (i%LINE_BREAK_NUM) )+'px;';
 			str +=				'position:relative;';

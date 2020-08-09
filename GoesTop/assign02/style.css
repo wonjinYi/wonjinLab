@@ -1,0 +1,91 @@
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap');
+
+/* for test */
+#temp-div{
+	text-align : center;
+}
+#temp-img{
+	width : 150px;
+	height : auto;
+	
+	border : 2px solid #0d6100;
+	border-radius : 20px;
+}
+#temp-img:click{
+	border-radius : 100px;
+}
+#temp-input{
+	line-height : 30px;
+	font-size : 30px;
+	width : 120px;
+}
+/* for test */
+
+
+
+body {
+    font-family: 'Nanum Gothic', sans-serif;
+    background-color : #0d6100;
+	
+
+}
+
+article{
+	
+}
+img{
+	top : 0;
+	border : solid 3px rgba(255,255,255,0);
+	transition : all 0.5s;
+}
+img:hover{
+	top : -10px;
+	border-color : rgba(255, 217, 0, 1);
+	z-index : 1001;
+}
+
+#card-main-container{
+	display : flex;
+	align-items : flex-end;
+	justify-content : center;
+	
+	flex-wrap : wrap;
+	padding : 10px;
+	
+}
+#YT-container{
+	display : flex;
+	flex-direction : column;
+}
+
+.card-sub-container{
+	/*flex : auto; position : relative;*/
+	display : flex;
+	flex-direction : column;
+	flex-wrap : wrap;
+	padding : 20px;
+	
+}
+.card{
+	width : 70px;
+	height : auto;
+}
+.cards-line{
+	position : relative;
+	top : 0;
+}
+.dummy{
+	padding-bottom : 105px;	
+}
+
+@media (max-width:769px){
+	#card-main-container{
+		flex-direction : column;
+		align-items : flex-start;
+		justify-content : flex-start;
+	}
+	.card{
+		width : 50px;
+		height : auto;
+	}
+}
