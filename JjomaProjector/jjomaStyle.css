@@ -129,17 +129,28 @@ article{
 *************************************************************************/
 
 .modal{
+	opacity : 0;
+	
 	position: fixed;
-	top: 0; left: 0;
+	top: 0px; left: 0;
 	width: 100%; height: 100%;
 	
 	max-width : 100%;
 	max-height : 100%;
 
-	
 	display: flex;
 	justify-content: center;
 	align-items : center;
+	
+	transition : opacity 0.5s;
+}
+.modal.opaque{
+	opacity : 1;
+	transition : opacity 0.5s;
+}
+.modal.unstaged {
+	top:-100px;
+	height : 0;
 }
 
 .modal-overlay{
@@ -151,7 +162,7 @@ article{
 	transition : all 0.5s;
 }
 .modal-overlay:hover{
-	background-color : RGBA(0, 0, 0, 0.3);
+	background-color : RGBA(0, 0, 0, 0.5);
 }
 
 .modal-contents{
@@ -192,9 +203,7 @@ article{
 	background-color : #ffd500;
 }
 
-.hidden {
-	display : none;
-}
+
 
 /***********************************************************************
 ************************************************************************

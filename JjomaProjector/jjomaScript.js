@@ -61,7 +61,9 @@ async function main(){
 		
 			const description = data[mainCategory][subCategory].description;
 			
-			TARGET['modal_container'].classList.toggle('hidden');
+			TARGET['modal_container'].classList.toggle('unstaged');
+			TARGET['modal_container'].classList.toggle('opaque');
+			
 			TARGET['body'].classList.toggle('modal-open');
 			TARGET['modal_text'].innerText = description;	
 		}
@@ -71,20 +73,32 @@ async function main(){
 	});
 		// --- close modal
 	TARGET['modal_close'].addEventListener("click", function(e){
-		TARGET['modal_container'].classList.toggle('hidden');
+		TARGET['modal_container'].classList.toggle('opaque');
 		TARGET['body'].classList.toggle('modal-open');
+		
+		TARGET['modal_container'].addEventListener('transitionend', function(e){
+			TARGET['modal_container'].classList.toggle('unstaged');
+			this.removeEventListener('transitionend',arguments.callee);
+		});
 	});
 	TARGET['modal_overay'].addEventListener("click", function(e){
-		TARGET['modal_container'].classList.toggle('hidden');
+		TARGET['modal_container'].classList.toggle('opaque');
 		TARGET['body'].classList.toggle('modal-open');
+		
+		TARGET['modal_container'].addEventListener('transitionend', function(e){
+			TARGET['modal_container'].classList.toggle('unstaged');
+			this.removeEventListener('transitionend',arguments.callee);
+		});
 	});
 	
 	
 	
-	
+	//CAT CAT CAT CAT CAT CAT CAT CAT CAT CAT CAT CAT CAT CAT CAT CAT CAT CAT 
 	//CUTE KAWAII CAT!!! CAT!!! Only I don't have cat.... but Others have cat...
+	//CAT CAT CAT CAT CAT CAT CAT CAT CAT CAT CAT CAT CAT CAT CAT CAT CAT CAT 
 	document.getElementById('project-title').addEventListener('click', (e)=>{
-		TARGET['modal_container'].classList.toggle('hidden');
+		TARGET['modal_container'].classList.toggle('unstaged');
+		TARGET['modal_container'].classList.toggle('opaque');
 		TARGET['body'].classList.toggle('modal-open');
 		TARGET['modal_text'].innerHTML = '<img src="res/cuteKawaiiCat.gif">';
 	});
