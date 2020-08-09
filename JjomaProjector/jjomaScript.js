@@ -11,6 +11,7 @@ async function main(){
 		body : document.querySelector('body'),
 		article : document.getElementById('jjoriping'),
 		modal_container : document.getElementById('modal-container'),
+		modal_overay : document.getElementsByClassName('modal-overlay')[0],
 		modal_text : (document.getElementById('modal-container')).querySelector('.modal-text'),
 		modal_close : (document.getElementById('modal-container')).querySelector('.modal-close')
 	};
@@ -47,10 +48,12 @@ async function main(){
 		const subCategory = getSubCategory(ASSIGNMENT_TYPE, CATEGORY_KEY, ROOT_CATEGORY_SET[i]);
 		str += makeHtmlString( (data[ROOT_CATEGORY_SET[i]]), ROOT_CATEGORY_SET[i], subCategory );
 	}
-
 	TARGET['article'].innerHTML = str;
 	
+	
+	
 	//Add eventListener for main-category(in jjoma:큰유형), sub-category(in jjoma:작은유형)
+		// --- open modal
 	TARGET['article'].addEventListener("click", function(e){
 		try{
 			const mainCategory = e.target.getAttribute('data-main-category');
@@ -66,10 +69,16 @@ async function main(){
 			//console.log('그거아니다');
 		}
 	});
+		// --- close modal
 	TARGET['modal_close'].addEventListener("click", function(e){
 		TARGET['modal_container'].classList.toggle('hidden');
 		TARGET['body'].classList.toggle('modal-open');
 	});
+	TARGET['modal_overay'].addEventListener("click", function(e){
+		TARGET['modal_container'].classList.toggle('hidden');
+		TARGET['body'].classList.toggle('modal-open');
+	});
+	
 	
 	
 	
