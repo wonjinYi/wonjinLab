@@ -18,7 +18,7 @@ const CARDS = [	"1_G", "1_T", "1_P1", "1_P2",
 function main(){
 	const TARGET = {
 		body : document.getElementsByTagName('body'),
-		card_container : document.getElementById('card-container')
+		module : document.getElementsByClassName('test-module'),
 	};
 	let drawNum = 10;
 	

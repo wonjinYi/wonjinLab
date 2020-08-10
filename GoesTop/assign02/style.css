@@ -41,9 +41,10 @@ body {
 } .repick-btn:hover{ transform : rotate(1080deg); }
 
 .score-text{
+	text-align : center;
 	padding : 5px 0px
 }
-.bak ul{ padding : 0; }
+.bak ul{ padding : 0; margin:0;}
 .bak-list{
 	text-align : center;
 	padding : 3px;
