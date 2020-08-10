@@ -33,6 +33,7 @@ function main(){
 	updateCardContainer(myCards);
 	
 	//temp button for test -------------------------------------
+	/*
 	document.getElementById('temp-btn').addEventListener('click',(e)=>{
 		drawNum = parseInt(document.getElementById('temp-input').value);
 		console.log(drawNum);
@@ -42,6 +43,7 @@ function main(){
 		updateCardContainer(myCards);
 		console.log(myCards);
 	});
+	*/
 	//temp button for test -------------------------------------
 	
 
