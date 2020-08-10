@@ -25,16 +25,20 @@ td{
 	width : 20px;
 	height : 20px;
 	background-color : #d1d1d1;
+
 }
 .snakehead{
 	background-color : #000000;
+
 }
 .snakebody{
 	background-color : #4a4a4a;
+	transition : all 1s;
 }
 
 .food{
 	background-color : #ffbf00;
+	transition : all 1s;
 }
 
 #score_board{
@@ -47,14 +51,7 @@ td{
 }
 
 #onscreen_keyboard{
-	flex: 1 0 0px;
-	display : flex;
-	align-items: center;
-	width: 100%;
-	box-sizing: border-box;
-	padding : 50px;
-	
-	text-align : center;
+	display : none;
 }
 .key {
 	
@@ -90,6 +87,14 @@ td{
 		flex-direction: column;
 	}
 	#onscreen_keyboard {
+		flex: 1 0 0px;
+		display : flex;
+		align-items: center;
+		width: 100%;
+		box-sizing: border-box;
+		padding : 50px;
+	
+	text-align : center;
 		padding: 20px;
 	}
 	td {
