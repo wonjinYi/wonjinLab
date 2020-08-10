@@ -9,9 +9,9 @@
 * [wonjin Lab](https://lab.wonj.in)
 
 ### Contents
-* [calendar Jin](https://lab.wonj.in/calendarJin/) : calendar (jjoma assignment 1)
+* [calendar Jin](https://lab.wonj.in/CalendarJin/) : calendar (jjoma assignment 1)
 * [Abyssal Snake](https://lab.wonj.in/AbyssalSnake/) : snake game (jjoma assignment 2)
-* [JJOMA Projector](https://lab.wonj.in/jjomaProjector/) : show assignments written by students of Jjoriping hacking training school
+* [JJOMA Projector](https://lab.wonj.in/JjomaProjector/) : show assignments written by students of Jjoriping hacking training school
 * [GoesTop](https://lab.wonj.in/GoesTop/) : GoStop web game the Korea traditional board game (jjoma assignment 3)
 * [BitterFear](https://lab.wonj.in/BitterFear/) : If you don't want to suffer the bitter taste of fear, pay back on time
 
