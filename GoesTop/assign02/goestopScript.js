@@ -47,17 +47,34 @@ function main(){
 	
 	
 	//temp button for test -------------------------------------
-	/*
-	document.getElementById('temp-btn').addEventListener('click',(e)=>{
-		drawNum = parseInt(document.getElementById('temp-input').value);
-		console.log(drawNum);
-		for(let key in myCards){myCards[key] = [];}
-		organizeCards(myCards, drawCard(drawNum), TARGET);
-		
-		updateCardContainer(myCards);
-		console.log(myCards);
+	
+	const temp_btn = document.getElementsByClassName('redraw-btn');
+	const temp_input= document.getElementsByClassName('redraw-input');
+	for(let i=0; i<temp_btn.length; i++){
+		temp_btn[i].addEventListener('click',(e)=>{
+			drawNum = parseInt(temp_input[i].value);
+			for(let key in players[i].cards){
+				const abab = players[i].cards[key].length;
+				for(let k=0; k<abab; k++){
+					let temp=players[i].cards[key].pop();
+					//console.log('temp : ' + temp);
+					cardPool.push(temp);
+				}
+				//players[i].cards[key] = [];
+			}
+			//console.log(cardPool.length);
+			//console.log(players[i].cards);
+			
+			organizeCards(players[i].cards, drawCard(drawNum, i));
+
+			updateCardContainer(players[i]);
+			
+			//console.log('------------------------');
+			//console.log(players[i].cards);
 	});
-	*/
+	}
+	
+	
 	//temp button for test -------------------------------------
 	
 
