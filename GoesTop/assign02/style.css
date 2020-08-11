@@ -24,21 +24,21 @@ body {
 	background-color : green;
 }
 
-.repick{
+.redraw{
 	display : flex;
 	align-items : center;
 }
-.repick-input{
+.redraw-input{
 	text-align : center;
 	width : 60px;
 	height : 33px;
 }
-.repick-btn{
+.redraw-btn{
 	padding : 10px;
 	background-color : white;
 	cursor : pointer;
 	transition : transform 1.5s;
-} .repick-btn:hover{ transform : rotate(1080deg); }
+} .redraw-btn:hover{ transform : rotate(1080deg); }
 
 .score-text{
 	text-align : center;
