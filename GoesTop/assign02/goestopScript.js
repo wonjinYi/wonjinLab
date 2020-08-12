@@ -29,13 +29,8 @@ const OVERLAP_SPACE = { horizon:30, vertical:40 };
 
 
 function main(){
-	const TARGET = {
-		body : document.getElementsByTagName('body'),
-		module : document.getElementsByClassName('test-module'),
-	};
-	
 	let players = initPlayers(PLAYERS_NUM);
-	let drawNum = 10;
+	let drawNum = 15;
 	
 	for(let i=0; i<PLAYERS_NUM; i++){
 		organizeCards(players[i].cards, drawCard(drawNum, i) );
@@ -46,13 +41,15 @@ function main(){
 	//
 	
 	
-	//temp button for test -------------------------------------
+	//temp code for test -------------------------------------
 	
 	const temp_btn = document.getElementsByClassName('redraw-btn');
 	const temp_input= document.getElementsByClassName('redraw-input');
 	for(let i=0; i<temp_btn.length; i++){
+		temp_input[i].value = 15;
 		temp_btn[i].addEventListener('click',(e)=>{
 			drawNum = parseInt(temp_input[i].value);
+			
 			for(let key in players[i].cards){
 				const abab = players[i].cards[key].length;
 				for(let k=0; k<abab; k++){
@@ -64,18 +61,17 @@ function main(){
 			}
 			//console.log(cardPool.length);
 			//console.log(players[i].cards);
-			
+
 			organizeCards(players[i].cards, drawCard(drawNum, i));
 
 			updateCardContainer(players[i]);
-			
+
 			//console.log('------------------------');
 			//console.log(players[i].cards);
-	});
+		});
 	}
-	
-	
-	//temp button for test -------------------------------------
+
+	//temp code for test -------------------------------------
 	
 
 }
@@ -87,7 +83,8 @@ function initPlayers(PLAYERS_NUM){
 	for(let i=0; i<PLAYERS_NUM; i++){
 		let player = {
 			container:{},
-			cards:{}
+			cards:{},
+			status:{}
 		};
 		
 		player.container.status = root[i].getElementsByClassName('status-main-container')[0];
@@ -98,6 +95,8 @@ function initPlayers(PLAYERS_NUM){
 			T : [],
 			P : []
 		};
+		player.status.score = 0;
+		player.status.bak = [];
 		
 		_players.push(player);
 	}
@@ -173,19 +172,29 @@ function updateCardContainer(player){
 			else { _marginRight = (-1) * ( (player.cards[key].length)%LINE_BREAK_NUM ) * OVERLAP_SPACE.horizon; }
 			CARDS_CONTAINER.getElementsByClassName(key)[0].style.marginRight = _marginRight + 'px';
 		
-			// Vertical Overlap  ::  If there is line Breaking, overlap .card-line element vertically
+			// Vertical Overlap & negative margin-top  ::  If there is line Breaking, overlap .card-line element vertically
 			if(CARDS[key].length>LINE_BREAK_NUM){
+				// overlap
 				const CARDS_LINE = ( CARDS_CONTAINER.getElementsByClassName(key)[0] ).getElementsByClassName('cards-line');
-
 				for(let i=0; i<CARDS_LINE.length - 1; i++ ){
 					CARDS_LINE[i].style.top = ( (CARDS_LINE.length - 1 - i) * OVERLAP_SPACE.vertical ) + 'px';
 				}
+				
+				// negative margin-top
+				CARDS_CONTAINER.getElementsByClassName(key)[0].style.marginTop = (-1)*(CARDS_LINE.length-1)*OVERLAP_SPACE.vertical + 'px'; 
 			}
 			
 		}
-		else{
-			CARDS_CONTAINER.getElementsByClassName(key)[0].innerHTML = '<div class="dummy"></div>';
-		}
+		// If there are no cards, current .card-sub-container fill with .dummy or div
+		else {
+			if (key == 'Y' || key == 'T'){
+				CARDS_CONTAINER.getElementsByClassName(key)[0].innerHTML = '<div class="dummy"></div>';
+			}
+			else {
+				CARDS_CONTAINER.getElementsByClassName(key)[0].innerHTML = '<div></div>';
+			}
+		} 
+
 	}
 }
 
