@@ -34,11 +34,17 @@ function main(){
 	
 	for(let i=0; i<PLAYERS_NUM; i++){
 		organizeCards(players[i].cards, drawCard(drawNum, i) );
-		//console.log((players[i].container.cards).getElementsByClassName('G'));
+		players[i].status.score = updateScore(players[i].cards);
+		
 		updateCardContainer(players[i]);
 	}
-	console.log(players);
-	//
+	updateBak(	players.map( (player) => { return player.container.status;	} ), 
+				players.map( (player) => { return player.status; 			} ) );
+	
+	for(let i=0; i<PLAYERS_NUM; i++){
+		updateStatusContainer(players[i].container.status, players[i].status);
+	}
+
 	
 	
 	//temp code for test -------------------------------------
@@ -63,9 +69,9 @@ function main(){
 			//console.log(players[i].cards);
 
 			organizeCards(players[i].cards, drawCard(drawNum, i));
-
+			players[i].status.score = updateScore(players[i].cards);
 			updateCardContainer(players[i]);
-
+			updateStatusContainer(players[i].container.status, players[i].status);
 			//console.log('------------------------');
 			//console.log(players[i].cards);
 		});
@@ -196,6 +202,75 @@ function updateCardContainer(player){
 		} 
 
 	}
+}
+
+function updateScore(CARDS){
+	let score = 0;
+	
+	//Regular score condition
+	//
+	let Pcnt = 0;
+	CARDS.P.forEach( (card)=>{ Pcnt += card.match(/P/g).length; });
+	console.log('p : '+(Pcnt));
+	if( Pcnt >= 10 ){ 
+		score += Pcnt-9; 
+		console.log('P', score);
+				  
+	}
+	//Y, T
+	if( CARDS.Y.length >= 5 ){ score += CARDS.Y.length-4; console.log('Y', score);}
+	if( CARDS.T.length >= 5 ){ score += CARDS.T.length-4; console.log('T', score);}
+	//G
+	if( CARDS.G.length == 5){ score += 15; console.log('G', score);}
+	else if ( CARDS.G.length == 4 ){ score += 4; }
+	else if ( CARDS.G.length == 3 ){
+		if( CARDS.G.includes('12_G') ){ score += 2; }
+		else { score += 3; }
+	}
+	
+	//Special score condition
+	//고도리
+	if( containsAll(CARDS.Y, ['2_Y', '4_Y', '8_Y']) ){ score += 5; console.log('고도리', score)}
+	//홍단
+	if( containsAll(CARDS.T, ['1_T', '2_T', '3_T']) ){ score += 3; console.log('홍', score)}
+	//초단
+	if( containsAll(CARDS.T, ['4_T', '5_T', '7_T']) ){ score += 3; console.log('초', score)}
+	//청단
+	if( containsAll(CARDS.T, ['6_T', '9_T', '10_T']) ){ score += 3; console.log('청', score)}
+	
+	return score;
+}
+function updateBak(){
+	// determine bak
+	let _bak = [];
+	//Math.max.apply(null, STATUS.map( (element)=>{return element.score;} ));
+	
+	return _bak;
+	
+}
+function updateStatusContainer(STATUS_CONTAINER, STATUS){
+	console.log(STATUS_CONTAINER, STATUS);
+	
+	
+	// set .score-text
+	STATUS_CONTAINER.getElementsByClassName('score-text')[0].textContent = STATUS.score;
+	
+	// update .bak
+	for(let i=0; i<STATUS.bak.length; i++){
+		STATUS_CONTAINER.getElementsByClassName(STATUS.bak[i])[0].classList.add('actived-bak');
+	}
+	
+}
+
+
+
+function containsAll(arr, elements){
+	for(let i=0; i<elements.length; i++){
+		if( arr.includes(elements[i]) == false ){
+			return false;
+		}
+	}	
+	return true;
 }
 
 function range(start, end){

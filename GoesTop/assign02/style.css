@@ -71,8 +71,7 @@ body {
 }
 .card:hover{
 	top : -10px;
-	width : 80px;
-	height : auto;
+
 	border-color : rgba(255, 217, 0, 1);
 	z-index : 1001;
 }
