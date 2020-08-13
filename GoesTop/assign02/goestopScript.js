@@ -199,8 +199,9 @@ function updateCardContainer(player){
 				// If there is line breaking, Its margin is max value ( = LINE_BREAK_NUM * OVERLAP_SPACE )
 				// BUT, there is not line breaking, margin is determined by the number of element(card)
 			let _marginRight = 0;
-			if(CARDS[key].length >= LINE_BREAK_NUM){ _marginRight = (-1) * LINE_BREAK_NUM * OVERLAP_SPACE.horizon; }
-			else { _marginRight = (-1) * ( (player.cards[key].length)%LINE_BREAK_NUM ) * OVERLAP_SPACE.horizon; }
+			if(CARDS[key].length >= LINE_BREAK_NUM){ _marginRight = (-1) * (LINE_BREAK_NUM-1) * OVERLAP_SPACE.horizon; }
+			else { _marginRight = (-1) * ( (player.cards[key].length-1) * OVERLAP_SPACE.horizon ); }
+			//else { _marginRight = (-1) * ( (player.cards[key].length)%LINE_BREAK_NUM ) * OVERLAP_SPACE.horizon; }
 			CARDS_CONTAINER.getElementsByClassName(key)[0].style.marginRight = _marginRight + 'px';
 		
 			// Vertical Overlap & negative margin-top  ::  If there is line Breaking, overlap .card-line element vertically
