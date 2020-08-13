@@ -17,8 +17,8 @@ const CARDS = [
 ];
 
 
-let cardPool = [];
-CARDS.forEach( card => { cardPool.push(card); } );
+let cardPool = CARDS.map( card => { return card; } );
+
 
 const PLAYERS_NUM = 2; // The number of game players
 
@@ -32,18 +32,25 @@ function main(){
 	let players = initPlayers(PLAYERS_NUM);
 	let drawNum = 15;
 	
+	//run about card
 	for(let i=0; i<PLAYERS_NUM; i++){
 		organizeCards(players[i].cards, drawCard(drawNum, i) );
-		players[i].status.score = updateScore(players[i].cards);
-		
 		updateCardContainer(players[i]);
 	}
-	updateBak(	players.map( (player) => { return player.container.status;	} ), 
-				players.map( (player) => { return player.status; 			} ) );
-	
+
+	//run about status
+		// status.score
+	players.forEach( player => { player.status.score = updateScore(player.cards); } );
+		// status.bak
+	const winnerIndex = getWinnerIndex( players.map( (player) => { return player.status.score; } ) );
+
 	for(let i=0; i<PLAYERS_NUM; i++){
+		if( players[i].status.score != players[winnerIndex].status.score ){
+			updateBak(players[winnerIndex], players[i]);
+		}
 		updateStatusContainer(players[i].container.status, players[i].status);
 	}
+
 
 	
 	
@@ -54,26 +61,40 @@ function main(){
 	for(let i=0; i<temp_btn.length; i++){
 		temp_input[i].value = 15;
 		temp_btn[i].addEventListener('click',(e)=>{
+			
 			drawNum = parseInt(temp_input[i].value);
 			
+			//reset
 			for(let key in players[i].cards){
 				const abab = players[i].cards[key].length;
 				for(let k=0; k<abab; k++){
 					let temp=players[i].cards[key].pop();
-					//console.log('temp : ' + temp);
 					cardPool.push(temp);
 				}
-				//players[i].cards[key] = [];
 			}
-			//console.log(cardPool.length);
-			//console.log(players[i].cards);
+			
+			players.forEach( player => { 
+				(player.status.bak).forEach( bakElement => {
+					(player.container.status).getElementsByClassName(bakElement)[0].classList.remove('actived-bak');
+				});
+				player.status.bak = []; 
+			} );
 
+			
+			//card
 			organizeCards(players[i].cards, drawCard(drawNum, i));
-			players[i].status.score = updateScore(players[i].cards);
 			updateCardContainer(players[i]);
-			updateStatusContainer(players[i].container.status, players[i].status);
-			//console.log('------------------------');
-			//console.log(players[i].cards);
+			//status
+			players[i].status.score = updateScore(players[i].cards);
+			const winnerIndex = getWinnerIndex( players.map( (player) => { return player.status.score; } ) );
+			for(let k=0; k<PLAYERS_NUM; k++){
+				if( players[k].status.score != players[winnerIndex].status.score ){
+					updateBak(players[winnerIndex], players[k]);
+				}
+				updateStatusContainer(players[k].container.status, players[k].status);
+			}	
+			
+			console.log(players);
 		});
 	}
 
@@ -81,6 +102,10 @@ function main(){
 	
 
 }
+
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 
 function initPlayers(PLAYERS_NUM){
 	const root = document.getElementsByClassName('test-module');
@@ -208,20 +233,14 @@ function updateScore(CARDS){
 	let score = 0;
 	
 	//Regular score condition
-	//
-	let Pcnt = 0;
-	CARDS.P.forEach( (card)=>{ Pcnt += card.match(/P/g).length; });
-	console.log('p : '+(Pcnt));
-	if( Pcnt >= 10 ){ 
-		score += Pcnt-9; 
-		console.log('P', score);
-				  
-	}
+	//P
+	const P_CNT = countCharInArray(CARDS.P, 'P')
+	if( P_CNT >= 10 ){ score += P_CNT-9; }
 	//Y, T
-	if( CARDS.Y.length >= 5 ){ score += CARDS.Y.length-4; console.log('Y', score);}
-	if( CARDS.T.length >= 5 ){ score += CARDS.T.length-4; console.log('T', score);}
+	if( CARDS.Y.length >= 5 ){ score += CARDS.Y.length-4; }
+	if( CARDS.T.length >= 5 ){ score += CARDS.T.length-4; }
 	//G
-	if( CARDS.G.length == 5){ score += 15; console.log('G', score);}
+	if( CARDS.G.length == 5){ score += 15; }
 	else if ( CARDS.G.length == 4 ){ score += 4; }
 	else if ( CARDS.G.length == 3 ){
 		if( CARDS.G.includes('12_G') ){ score += 2; }
@@ -230,28 +249,34 @@ function updateScore(CARDS){
 	
 	//Special score condition
 	//고도리
-	if( containsAll(CARDS.Y, ['2_Y', '4_Y', '8_Y']) ){ score += 5; console.log('고도리', score)}
+	if( containsAll(CARDS.Y, ['2_Y', '4_Y', '8_Y']) ){ score += 5; }
 	//홍단
-	if( containsAll(CARDS.T, ['1_T', '2_T', '3_T']) ){ score += 3; console.log('홍', score)}
+	if( containsAll(CARDS.T, ['1_T', '2_T', '3_T']) ){ score += 3; }
 	//초단
-	if( containsAll(CARDS.T, ['4_T', '5_T', '7_T']) ){ score += 3; console.log('초', score)}
+	if( containsAll(CARDS.T, ['4_T', '5_T', '7_T']) ){ score += 3; }
 	//청단
-	if( containsAll(CARDS.T, ['6_T', '9_T', '10_T']) ){ score += 3; console.log('청', score)}
+	if( containsAll(CARDS.T, ['6_T', '9_T', '10_T']) ){ score += 3; }
+	
 	
 	return score;
 }
-function updateBak(){
-	// determine bak
-	let _bak = [];
-	//Math.max.apply(null, STATUS.map( (element)=>{return element.score;} ));
+
+function updateBak(winner, player){
 	
-	return _bak;
+	//GWB 광박
+	if( (winner.cards.G).length >= 3 && (player.cards.G).length == 0 ){ (player.status.bak).push('GWB'); }
+	//MB 멍박
+	if( (winner.cards.Y).length >= 7 && (player.cards.Y).length <= 3 ){ (player.status.bak).push('MB'); }
+	//PB 피박
+	const P_CNT_WINNER = countCharInArray(winner.cards.P, 'P');
+	const P_CNT_PLAYER = countCharInArray(player.cards.P, 'P');
+	if( P_CNT_WINNER >= 10 && P_CNT_PLAYER <= 8 ){ (player.status.bak).push('PB'); }
+	//GB 고박
+	// It will be written on assign 3-2
 	
 }
+
 function updateStatusContainer(STATUS_CONTAINER, STATUS){
-	console.log(STATUS_CONTAINER, STATUS);
-	
-	
 	// set .score-text
 	STATUS_CONTAINER.getElementsByClassName('score-text')[0].textContent = STATUS.score;
 	
@@ -262,7 +287,24 @@ function updateStatusContainer(STATUS_CONTAINER, STATUS){
 	
 }
 
+function getWinnerIndex(scores){
+	const MAX_SCORE_VALUE = Math.max.apply(null, scores.map( (element)=>{return element;} ));
 
+	//let maxIndexes = []; // indexs of scores[] that has max score
+	let maxIndex = 0; 
+	
+	// assign index that has MAX_SCORE_VALUE, in 'scroes[]'
+	for(let i=0; i<scores.length; i++){
+		//if( MAX_SCORE_VALUE == scores[i] ){ maxIndexes.push(i); }
+		if( MAX_SCORE_VALUE == scores[i] ){ maxIndex = i; break;}
+	}
+	
+	return maxIndex;
+}
+
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 
 function containsAll(arr, elements){
 	for(let i=0; i<elements.length; i++){
@@ -272,6 +314,15 @@ function containsAll(arr, elements){
 	}	
 	return true;
 }
+
+function countCharInArray(arr, char){
+	let cnt = 0;
+	arr.forEach( (element) => { cnt += element.match(new RegExp(char,'g')).length; } );
+	
+	return cnt;
+}
+
+
 
 function range(start, end){
 	let arr=[];
