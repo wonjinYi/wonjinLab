@@ -1,0 +1,117 @@
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap');
+
+
+body {
+    font-family: 'Nanum Gothic', sans-serif;
+    background-color : #0d6100;
+}
+
+.test-module{
+	display : flex;
+	margin : 10px 0 ;
+}
+
+/* ▼ for status-main-container ▼ */
+/* ▼ for status-main-container ▼ */
+/* ▼ for status-main-container ▼ */
+
+.status-main-container{
+	display : flex;
+	flex-direction : column;
+	justify-content : center;
+	
+	padding : 10px;
+	background-color : green;
+}
+
+.redraw{
+	display : flex;
+	align-items : center;
+}
+.redraw-input{
+	text-align : center;
+	width : 60px;
+	height : 33px;
+}
+.redraw-btn{
+	padding : 10px;
+	background-color : white;
+	cursor : pointer;
+	transition : transform 1.5s;
+} .redraw-btn:hover{ transform : rotate(1080deg); }
+
+.score-text{
+	text-align : center;
+	padding : 5px 0px
+}
+.bak ul{ padding : 0; margin:0;}
+.bak-list{
+	text-align : center;
+	padding : 3px;
+	list-style-type : none;
+	color : #5c5c5c;
+	background-color : #454545;
+	border : 1px solid #5c5c5c;
+}
+.actived-bak{
+	color : black;
+	background-color : #26ff00;
+}
+/* ▼ for card-main-container ▼ */
+/* ▼ for card-main-container ▼ */
+/* ▼ for card-main-container ▼ */
+
+.card{
+	width : 60px;
+	height : auto;
+	
+	top : 0;
+	border : solid 3px rgba(255,255,255,0);
+	transition : all 0.5s;
+}
+.card:hover{
+	top : -10px;
+
+	border-color : rgba(255, 217, 0, 1);
+	z-index : 1001;
+}
+
+.card-main-container{
+	display : flex;
+	align-items : flex-end;
+	justify-content : center;
+	
+	flex-wrap : wrap;
+	padding : 10px;
+}
+.YT-container{
+	display : flex;
+	flex-direction : column;
+}
+.card-sub-container{
+	/*flex : auto; position : relative;*/
+	display : flex;
+	flex-direction : column;
+	flex-wrap : wrap;
+	padding : 20px;
+}
+.cards-line{
+	position : relative;
+	top : 0;
+}
+
+.dummy{
+	padding-bottom : 105px;	
+}
+
+@media (max-width:769px){
+	#card-main-container{
+		flex-direction : column;
+		align-items : flex-start;
+		justify-content : flex-start;
+	}
+	.card{
+		width : 50px;
+		height : auto;
+	}
+}
