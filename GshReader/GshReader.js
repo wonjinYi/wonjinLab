@@ -10,7 +10,8 @@ async function main(){
 	const COLUMNS = ['이름', '지역', '전화번호'];
 	
 	const DATA = await separateRowFromJson(SOURCE, COLUMNS);
-
+	console.log(DATA);
+	
 	for(let i=0; i<DATA.length; i++){
 		TARGET['name'][i].textContent = DATA[i]['이름'];
 		TARGET['region'][i].textContent = DATA[i]['지역'];
