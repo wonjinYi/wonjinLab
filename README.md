@@ -16,6 +16,7 @@
 	* [assign 3-1](https://lab.wonj.in/GoesTop/assign01)
 	* [assign 3-2](https://lab.wonj.in/GoesTop/assign02)
 * [BitterFear](https://lab.wonj.in/BitterFear/) : If you don't want to suffer the bitter taste of fear, pay back on time
+* [GshReader](https://lab.wonj.in/GshReader/) : Simple GoogleSheet contents Parsing code.
 
 ### Resources used
 * [Experiment Icon](https://iconscout.com/icons/experiment) by [Rank Sol](https://iconscout.com/contributors/promotion-king) on [Iconscout](https://iconscout.com) - main page
