@@ -271,7 +271,7 @@ function updateBak(winner, player){
 	//PB 피박
 	const P_CNT_WINNER = countCharInArray(winner.cards.P, 'P');
 	const P_CNT_PLAYER = countCharInArray(player.cards.P, 'P');
-	if( P_CNT_WINNER >= 10 && P_CNT_PLAYER <= 8 ){ (player.status.bak).push('PB'); }
+	if( P_CNT_WINNER >= 10 && (( P_CNT_PLAYER > 0 ) && ( P_CNT_PLAYER <= 8 )) ){ (player.status.bak).push('PB'); }
 	//GB 고박
 	// It will be written on assign 3-2
 	
