@@ -15,6 +15,7 @@
 * [GoesTop](https://lab.wonj.in/GoesTop/) : GoStop web game the Korea traditional board game (jjoma assignment 3)
 	* [assign 3-1](https://lab.wonj.in/GoesTop/assign01)
 	* [assign 3-2](https://lab.wonj.in/GoesTop/assign02)
+	* [assign 3-3](https://lab.wonj.in/GoesTop/assign03)
 * [BitterFear](https://lab.wonj.in/BitterFear/) : If you don't want to suffer the bitter taste of fear, pay back on time
 * [GshReader](https://lab.wonj.in/GshReader/) : Simple GoogleSheet contents Parsing code.
 
