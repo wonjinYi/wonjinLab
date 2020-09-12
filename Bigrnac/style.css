@@ -2,19 +2,27 @@
 
 body{
     font-family: 'Nanum Gothic', sans-serif;
-	margin:0;
+	margin : 0;
 	height : 100%;
 }
 html{
 	height : 100%;
 }
 
+
+/* for block */
 .block{
 	width : 100%;
 	height : 10%;
-	border : 1px solid;
 }
+.bun	{ background-color : #ff9500; }
+.patty	{ background-color : #854d00; }
+.sauce	{ background-color : #fffbe0; }
+.lettuce{ background-color : #54b500; }
+.cheese	{ background-color : #ffdd00; }
 
+
+/* for mobile browser */
 @media (max-width:769px){
 	.main-container{
 		flex-direction : column;
