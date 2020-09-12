@@ -43,6 +43,7 @@ function startDrag(e){
 	clone = document.createElement('div');
 	clone.style.top = selectedElement.style.top;
 	clone.style.zIndex = 53;
+	clone.style.borderRadius = "100px";
 	selectedElement.classList.forEach( className => clone.classList.add(className) );
 	selectedElement.classList.forEach( className => selectedElement.classList.remove(className) );
 	selectedElement.classList.add("block", "empty");

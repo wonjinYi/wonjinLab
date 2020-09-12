@@ -5,7 +5,7 @@ html{
 }
 body{
     font-family: 'Nanum Gothic', sans-serif;
-	position : relative;
+	position : absolute;
 	margin : 0;
 	width : 100%;
 	height : 100%;
@@ -14,7 +14,7 @@ body{
 a{
 	text-decoration : none;
 	color : white;
-	z-index : 50;
+	z-index : 101;
 }
 
 
@@ -24,6 +24,7 @@ a{
 	position : relative;
 	width : 100%;
 	height : 100%;
+	text-align : center;
 }
 .block{
 	position : absolute;
