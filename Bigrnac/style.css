@@ -14,11 +14,17 @@ body{
 a{
 	text-decoration : none;
 	color : white;
+	z-index : 50;
 }
 
 
 
 /* for block */
+#blockContainer{
+	position : relative;
+	width : 100%;
+	height : 100%;
+}
 .block{
 	position : absolute;
 	width : 100%;
