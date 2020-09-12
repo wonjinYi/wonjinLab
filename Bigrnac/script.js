@@ -3,6 +3,7 @@ window.addEventListener('DOMContentLoaded', main);
 let TARGET;
 let clone;
 let isDraggingStarted = false;
+let oldMouseY = 0;
 
 async function main(){
 	TARGET = {
@@ -29,12 +30,15 @@ async function main(){
 
 function startDrag(e){
 	e.preventDefault()
+	oldMouseY = e.clientY;
 	
 	if (isDraggingStarted == true) { return 0; }
 	else { isDraggingStarted = true; }
 	
 	const selectedElement = e.target;
 	console.log('start drag', selectedElement);
+	
+	
 	
 	clone = document.createElement('div');
 	clone.style.top = selectedElement.style.top;
@@ -49,9 +53,13 @@ function startDrag(e){
 }
 
 function moveBlock(e){
-	//console.log('MOVE MOVE', e.target, e.clientX, e.clientY);
-	clone.style.top = e.clientY + 'px';
+	console.log('MOVE MOVE', e.clientY - oldMouseY, clone.style.top);
+	// initial !!! // clone.style.top = e.clientY + 'px';
+	//clone.style.top = (clone.style.top - e.movementY) + 'px';
+	clone.style.top = (clone.offsetTop + ( e.clientY - oldMouseY )) + 'px';
+	oldMouseY = e.clientY;
 }
+
 
 function endDrag(e){
 	console.log('END drag', e.target);
