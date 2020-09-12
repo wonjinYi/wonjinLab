@@ -5,8 +5,11 @@ html{
 }
 body{
     font-family: 'Nanum Gothic', sans-serif;
+	position : relative;
 	margin : 0;
+	width : 100%;
 	height : 100%;
+	overflow: hidden
 }
 a{
 	text-decoration : none;
@@ -17,6 +20,7 @@ a{
 
 /* for block */
 .block{
+	position : absolute;
 	width : 100%;
 	height : 10%;
 }
@@ -28,7 +32,7 @@ a{
 .sauce	{ background-color : #fffbe0; }
 .lettuce{ background-color : #54b500; }
 .cheese	{ background-color : #ffdd00; }
-
+.empty	{ background-color : #2F3336; }
 
 /* for mobile browser */
 @media (max-width:769px){
