@@ -1,11 +1,12 @@
 window.addEventListener('DOMContentLoaded', main);
 
 let AUDIOS = {
-	bun : new Audio('res/bun.wav'),
-	cheese : new Audio('res/cheese.wav'),
-	lettuce : new Audio('res/lettuce.wav'),
-	patty : new Audio('res/patty.wav'),
-	sauce : new Audio('res/sauce.wav'),
+	bun : new Audio('res/bun.mp3'),
+	cheese : new Audio('res/cheese.mp3'),
+	lettuce : new Audio('res/lettuce.mp3'),
+	patty : new Audio('res/patty.mp3'),
+	sauce : new Audio('res/sauce.mp3'),
+	full : new Audio('res/full.mp3'),
 }
 let TARGET = {};
 let BLOCKS = [];
@@ -126,7 +127,18 @@ function endDrag(e) {
 	TARGET.blockContainer.removeEventListener('mousemove', moveBlock);
 	TARGET.blockContainer.removeEventListener('touchmove', moveBlock);
 	
+	// initial status check
+	// <!-- 빵 패티 소스 양상추 빵 패티 치즈 소스 양상추 빵 -->
+	const kkiro = ['bun', 'patty', 'sauce', 'lettuce', 'bun', 'patty', 'cheese', 'sauce', 'lettuce', 'bun'];
+	for(let i=0; i<BLOCKS.length; i++){
+		if(BLOCKS[i].classList.contains(kkiro[i]) == false){break;}
+		else { if(i==BLOCKS.length-1){ AUDIOS['full'].play(); } }
+	}
+	
+	
 	isDraggingStarted = false;
+
+	
 }
 
 
