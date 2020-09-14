@@ -9,7 +9,7 @@ let isDraggingStarted = false;
 let oldMouseY = 0;
 
 
-async function main(){
+async function main () {
 	TARGET = {
 		blockContainer : document.getElementById('block-container'),
 		blocks : document.getElementsByClassName('block'),
@@ -17,7 +17,7 @@ async function main(){
 	
 	// block setting
 	let topSum = 0;
-	for(let i=0; i<TARGET.blocks.length; i++){
+	for( let i=0; i<TARGET.blocks.length; i++ ) {
 		BLOCKS.push(TARGET.blocks[i]);
 		
 		BLOCKS[i].style.top = topSum + 'px';
@@ -32,7 +32,7 @@ async function main(){
 	
 }
 
-function startDrag(e){
+function startDrag (e) {
 	e.preventDefault()
 	oldMouseY = e.clientY;
 	
@@ -40,16 +40,16 @@ function startDrag(e){
 	else { isDraggingStarted = true; }
 	
 	// make clone
-	dest = (e.target.dataset).index;
+	dest = parseInt( (e.target.dataset).index );
 	console.log('start drag', BLOCKS[dest]);
-	
 	
 	clone = document.createElement('div');
 	clone.style.top = BLOCKS[dest].style.top;
 	clone.style.zIndex = 53;
 	clone.style.borderRadius = "100px";
+	
 	BLOCKS[dest].classList.forEach( className => clone.classList.add(className) ); // copy e.target -> clone
-	BLOCKS[dest].classList.forEach( className => BLOCKS[dest].classList.remove(className) ); 
+	BLOCKS[dest].className = '';
 	BLOCKS[dest].classList.add("block", "empty");
 	
 	TARGET.blockContainer.insertBefore(clone, BLOCKS[dest]);
@@ -58,22 +58,41 @@ function startDrag(e){
 	console.log(BLOCKS[dest].dataset.index);
 }
 
-function moveBlock(e){
-	console.log('MOVE MOVE', e.clientY - oldMouseY, clone.style.top);
+function moveBlock(e) {
+	//console.log('MOVE MOVE', e.clientY - oldMouseY, clone.style.top, clone.offsetTop);
 
 	clone.style.top = (clone.offsetTop + ( e.clientY - oldMouseY )) + 'px';
-	oldMouseY = e.clientY;
+	oldMouseY = e.clientY; 
+	
+	//console.log('move', dest, BLOCKS[dest].offsetTop, centerOf(BLOCKS[dest+1]));
+	// 밑으로 보내기
+	if ( dest < BLOCKS.length-1 ) {
+		if ( clone.offsetTop + clone.offsetHeight > centerOf(BLOCKS[dest+1]) ) {
+			swapClassList( BLOCKS[dest], BLOCKS[dest+1] );
+			dest++;
+			//console.log('아래아래아래아래아래!!!');
+		}
+	}
+	// 위로 보내기
+	if ( dest > 0 ) {
+		if ( clone.offsetTop < centerOf(BLOCKS[dest-1]) ) {
+			swapClassList( BLOCKS[dest], BLOCKS[dest-1] );
+			dest--;
+			console.log('위위우이위위위위위!!!');
+		}
+	}
 }
 
 
-function endDrag(e){
+function endDrag(e) {
 	console.log('END drag', BLOCKS[dest]);
 	
 	// remove clone
 	//const selectedElement = document.getElementsByClassName('empty')[0];
 	BLOCKS[dest].classList.remove('empty');
 	clone.classList.forEach( className => BLOCKS[dest].classList.add(className) ); // copy clone -> e.target
-	clone.classList.forEach( className => clone.classList.remove(className) );
+	clone.className = '';
+	console.log('remove clone classlist ', clone.classList);
 	clone.remove();
 	
 	TARGET.blockContainer.removeEventListener('mousemove', moveBlock);
@@ -81,11 +100,43 @@ function endDrag(e){
 	isDraggingStarted = false;
 }
 
-function relocateBlocks(e){
+
+
+
+function relocateBlocks(e) {
 	console.log('resize');
 	let topSum = 0;
 	Array.prototype.forEach.call( BLOCKS, block => {
 		block.style.top = topSum + 'px';
 		topSum += block.offsetHeight;
 	});
+}
+		
+function centerOf(block) {
+	const height = block.offsetHeight;
+	const top = block.offsetTop;
+	
+	return (top + height/2);
+}
+
+function copyClassList(src, dest){
+	// copy to dest from src
+	res.classList.forEach( className => {
+		dest.classList.add(className);
+	});
+}
+						  
+function swapClassList(src, dest){
+	// swap src <-> dest
+	let temp = [];
+	
+	src.classList.forEach( className => temp.push(className) );
+	
+	// clear src & copy to src
+	src.className = '';
+	dest.classList.forEach( className => src.classList.add(className) );
+	
+	// clear dest & copy to dest
+	dest.className = '';
+	temp.forEach( className => dest.classList.add(className) );
 }
