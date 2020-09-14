@@ -26,7 +26,9 @@ async function main () {
 	
 	// change block.style.top when screen is resized
 	TARGET.blockContainer.addEventListener('mousedown',startDrag);
+	TARGET.blockContainer.addEventListener('touchstart',startDrag);
 	TARGET.blockContainer.addEventListener('mouseup',endDrag);
+	TARGET.blockContainer.addEventListener('touchend',endDrag);
 	window.addEventListener('resize', relocateBlocks);
 
 	
@@ -34,7 +36,9 @@ async function main () {
 
 function startDrag (e) {
 	e.preventDefault()
-	oldMouseY = e.clientY;
+	
+	if (window.innerWidth > 769) { oldMouseY = e.clientY; }
+	else { oldMouseY = e.touches[0].clientY; }
 	
 	if (isDraggingStarted == true) { return 0; }
 	else { isDraggingStarted = true; }
@@ -54,23 +58,31 @@ function startDrag (e) {
 	
 	TARGET.blockContainer.insertBefore(clone, BLOCKS[dest]);
 	TARGET.blockContainer.addEventListener('mousemove', moveBlock);
+	TARGET.blockContainer.addEventListener('touchmove', moveBlock);
 	
 	console.log(BLOCKS[dest].dataset.index);
 }
 
 function moveBlock(e) {
-	//console.log('MOVE MOVE', e.clientY - oldMouseY, clone.style.top, clone.offsetTop);
-
-	clone.style.top = (clone.offsetTop + ( e.clientY - oldMouseY )) + 'px';
-	oldMouseY = e.clientY; 
 	
-	//console.log('move', dest, BLOCKS[dest].offsetTop, centerOf(BLOCKS[dest+1]));
+	//console.log('move ', e.clientY, oldMouseY,e.touches[0].clientY);
+	
+	let newPosition = 0;
+	if (window.innerWidth > 769) { 
+		clone.style.top = (clone.offsetTop + ( e.clientY - oldMouseY )) + 'px';
+		oldMouseY = e.clientY; 
+	}
+	else { 
+		clone.style.top = (clone.offsetTop + ( e.touches[0].clientY - oldMouseY )) + 'px';
+		oldMouseY = e.touches[0].clientY; 
+	}
+
+	
 	// 밑으로 보내기
 	if ( dest < BLOCKS.length-1 ) {
 		if ( clone.offsetTop + clone.offsetHeight > centerOf(BLOCKS[dest+1]) ) {
 			swapClassList( BLOCKS[dest], BLOCKS[dest+1] );
 			dest++;
-			//console.log('아래아래아래아래아래!!!');
 		}
 	}
 	// 위로 보내기
@@ -78,7 +90,6 @@ function moveBlock(e) {
 		if ( clone.offsetTop < centerOf(BLOCKS[dest-1]) ) {
 			swapClassList( BLOCKS[dest], BLOCKS[dest-1] );
 			dest--;
-			console.log('위위우이위위위위위!!!');
 		}
 	}
 }
@@ -88,7 +99,6 @@ function endDrag(e) {
 	console.log('END drag', BLOCKS[dest]);
 	
 	// remove clone
-	//const selectedElement = document.getElementsByClassName('empty')[0];
 	BLOCKS[dest].classList.remove('empty');
 	clone.classList.forEach( className => BLOCKS[dest].classList.add(className) ); // copy clone -> e.target
 	clone.className = '';
@@ -96,6 +106,7 @@ function endDrag(e) {
 	clone.remove();
 	
 	TARGET.blockContainer.removeEventListener('mousemove', moveBlock);
+	TARGET.blockContainer.removeEventListener('touchmove', moveBlock);
 	
 	isDraggingStarted = false;
 }
@@ -104,7 +115,6 @@ function endDrag(e) {
 
 
 function relocateBlocks(e) {
-	console.log('resize');
 	let topSum = 0;
 	Array.prototype.forEach.call( BLOCKS, block => {
 		block.style.top = topSum + 'px';

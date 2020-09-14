@@ -51,7 +51,5 @@ a{
 
 /* for mobile browser */
 @media (max-width:769px){
-	.main-container{
-		flex-direction : column;
-	}
+
 }
