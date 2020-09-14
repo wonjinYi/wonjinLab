@@ -1,28 +1,32 @@
 window.addEventListener('DOMContentLoaded', main);
 
-let TARGET;
-let clone;
+let TARGET = {};
+let BLOCKS = [];
+let dest = 0; // the destination where a clone returns.
+
+let clone; // html element
 let isDraggingStarted = false;
 let oldMouseY = 0;
 
+
 async function main(){
 	TARGET = {
-		body : document.getElementsByTagName('body'),
 		blockContainer : document.getElementById('block-container'),
 		blocks : document.getElementsByClassName('block'),
 	};
 	
 	// block setting
 	let topSum = 0;
-	Array.prototype.forEach.call( TARGET.blocks, block => {
-		block.style.top = topSum + 'px';
-		topSum += block.offsetHeight;
+	for(let i=0; i<TARGET.blocks.length; i++){
+		BLOCKS.push(TARGET.blocks[i]);
 		
-		TARGET.blockContainer.addEventListener('mousedown',startDrag);
-		TARGET.blockContainer.addEventListener('mouseup',endDrag);
-	});
+		BLOCKS[i].style.top = topSum + 'px';
+		topSum += BLOCKS[i].offsetHeight;
+	}
 	
 	// change block.style.top when screen is resized
+	TARGET.blockContainer.addEventListener('mousedown',startDrag);
+	TARGET.blockContainer.addEventListener('mouseup',endDrag);
 	window.addEventListener('resize', relocateBlocks);
 
 	
@@ -35,39 +39,40 @@ function startDrag(e){
 	if (isDraggingStarted == true) { return 0; }
 	else { isDraggingStarted = true; }
 	
-	const selectedElement = e.target;
-	console.log('start drag', selectedElement);
-	
+	// make clone
+	dest = (e.target.dataset).index;
+	console.log('start drag', BLOCKS[dest]);
 	
 	
 	clone = document.createElement('div');
-	clone.style.top = selectedElement.style.top;
+	clone.style.top = BLOCKS[dest].style.top;
 	clone.style.zIndex = 53;
 	clone.style.borderRadius = "100px";
-	selectedElement.classList.forEach( className => clone.classList.add(className) );
-	selectedElement.classList.forEach( className => selectedElement.classList.remove(className) );
-	selectedElement.classList.add("block", "empty");
+	BLOCKS[dest].classList.forEach( className => clone.classList.add(className) ); // copy e.target -> clone
+	BLOCKS[dest].classList.forEach( className => BLOCKS[dest].classList.remove(className) ); 
+	BLOCKS[dest].classList.add("block", "empty");
 	
-	TARGET.blockContainer.insertBefore(clone, selectedElement);
-	
+	TARGET.blockContainer.insertBefore(clone, BLOCKS[dest]);
 	TARGET.blockContainer.addEventListener('mousemove', moveBlock);
+	
+	console.log(BLOCKS[dest].dataset.index);
 }
 
 function moveBlock(e){
 	console.log('MOVE MOVE', e.clientY - oldMouseY, clone.style.top);
-	// initial !!! // clone.style.top = e.clientY + 'px';
-	//clone.style.top = (clone.style.top - e.movementY) + 'px';
+
 	clone.style.top = (clone.offsetTop + ( e.clientY - oldMouseY )) + 'px';
 	oldMouseY = e.clientY;
 }
 
 
 function endDrag(e){
-	console.log('END drag', e.target);
+	console.log('END drag', BLOCKS[dest]);
 	
-	const selectedElement = document.getElementsByClassName('empty')[0];
-	selectedElement.classList.remove('empty');
-	clone.classList.forEach( className => selectedElement.classList.add(className) );
+	// remove clone
+	//const selectedElement = document.getElementsByClassName('empty')[0];
+	BLOCKS[dest].classList.remove('empty');
+	clone.classList.forEach( className => BLOCKS[dest].classList.add(className) ); // copy clone -> e.target
 	clone.classList.forEach( className => clone.classList.remove(className) );
 	clone.remove();
 	
@@ -79,7 +84,7 @@ function endDrag(e){
 function relocateBlocks(e){
 	console.log('resize');
 	let topSum = 0;
-	Array.prototype.forEach.call( TARGET.blocks, block => {
+	Array.prototype.forEach.call( BLOCKS, block => {
 		block.style.top = topSum + 'px';
 		topSum += block.offsetHeight;
 	});
