@@ -1,5 +1,12 @@
 window.addEventListener('DOMContentLoaded', main);
 
+let AUDIOS = {
+	bun : new Audio('res/bun.wav'),
+	cheese : new Audio('res/cheese.wav'),
+	lettuce : new Audio('res/lettuce.wav'),
+	patty : new Audio('res/patty.wav'),
+	sauce : new Audio('res/sauce.wav'),
+}
 let TARGET = {};
 let BLOCKS = [];
 let dest = 0; // the destination where a clone returns.
@@ -24,6 +31,9 @@ async function main () {
 		topSum += BLOCKS[i].offsetHeight;
 	}
 	
+	// warn
+	if( confirm('wanna play Audio?\n소리 재생 ㄱ?') == false ) { AUDIOS = {}; }
+	
 	// change block.style.top when screen is resized
 	TARGET.blockContainer.addEventListener('mousedown',startDrag);
 	TARGET.blockContainer.addEventListener('touchstart',startDrag);
@@ -45,7 +55,7 @@ function startDrag (e) {
 	
 	// make clone
 	dest = parseInt( (e.target.dataset).index );
-	console.log('start drag', BLOCKS[dest]);
+	//console.log('start drag', BLOCKS[dest]);
 	
 	clone = document.createElement('div');
 	clone.style.top = BLOCKS[dest].style.top;
@@ -60,7 +70,15 @@ function startDrag (e) {
 	TARGET.blockContainer.addEventListener('mousemove', moveBlock);
 	TARGET.blockContainer.addEventListener('touchmove', moveBlock);
 	
-	console.log(BLOCKS[dest].dataset.index);
+	(Object.keys(AUDIOS)).forEach( audio => {
+		if ( clone.classList.contains(audio) ){
+			AUDIOS[audio].play();
+			return;
+		}
+	})
+	
+	
+	//console.log(BLOCKS[dest].dataset.index);
 }
 
 function moveBlock(e) {
