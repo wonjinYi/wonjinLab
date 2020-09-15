@@ -6,7 +6,9 @@ let AUDIOS = {
 	lettuce : new Audio('res/lettuce.mp3'),
 	patty : new Audio('res/patty.mp3'),
 	sauce : new Audio('res/sauce.mp3'),
-	full : new Audio('res/full.mp3'),
+	onion : new Audio('res/onion.mp3'),
+	pickle : new Audio('res/pickle.mp3'),
+	full : new Audio('res/full_new.mp3'),
 }
 let ELEMENT = {};
 let BLOCKS = [];
@@ -161,8 +163,8 @@ function endDrag(e) {
 		ELEMENT.blockContainer.removeEventListener('touchmove', moveBlock);
 
 		// initial status check
-		// <!-- 빵 패티 소스 양상추 빵 패티 치즈 소스 양상추 빵 -->
-		const kkiro = ['bun', 'patty', 'sauce', 'lettuce', 'bun', 'patty', 'cheese', 'sauce', 'lettuce', 'bun'];
+		// 빵 패티 피클 양파 빵 패티 치즈 소스 양상추 빵
+		const kkiro = ['bun', 'patty', 'pickle', 'onion', 'bun', 'patty', 'cheese', 'sauce', 'lettuce', 'bun'];
 		for(let i=0; i<BLOCKS.length; i++){
 			if(BLOCKS[i].classList.contains(kkiro[i]) == false){break;}
 			else { if(i==BLOCKS.length-1){ AUDIOS['full'].play(); } }
