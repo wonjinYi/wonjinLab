@@ -54,7 +54,7 @@ async function main () {
 	ELEMENT.blockContainer.addEventListener('mouseup',endDrag);
 	ELEMENT.blockContainer.addEventListener('touchend',endDrag);
 	
-	window.addEventListener('resize', relocateBlocks);
+	window.addEventListener('resize', resizeScreen);
 }
 
 
@@ -72,6 +72,7 @@ function startDrag (e) {
 	if( BLOCKS.includes( e.target ) ) {
 		
 		MODE = 'swap';
+		Array.prototype.forEach.call( RESIZEBARS, bar => bar.classList.add('disable') );
 		
 		// make clone
 		target = parseInt( (e.target.dataset).index );
@@ -147,6 +148,8 @@ function endDrag(e) {
 	
 	// SWAP =====================================================================================
 	if( MODE == 'swap' ) {
+		Array.prototype.forEach.call( RESIZEBARS, bar => bar.classList.remove('disable') );
+		
 		// remove clone
 		BLOCKS[target].classList.remove('empty');
 		clone.classList.forEach( className => BLOCKS[target].classList.add(className) ); // copy clone -> e.target
@@ -178,12 +181,19 @@ function endDrag(e) {
 
 
 
-function relocateBlocks(e) {
+function resizeScreen(e) {
 	let topSum = 0;
-	Array.prototype.forEach.call( BLOCKS, block => {
-		block.style.top = topSum + 'px';
-		topSum += block.offsetHeight;
-	});
+	for(let i=0; i<BLOCKS.length; i++){
+		// relocate BLOCKS
+		BLOCKS[i].style.top = topSum + 'px';
+		topSum += BLOCKS[i].offsetHeight;
+		
+		// relocate RESIZEBARS
+		if( i != BLOCKS.length-1 ){ 
+			RESIZEBARS[i].style.top = ( BLOCKS[i+1].offsetTop - parseInt(RESIZEBARS[i].offsetHeight/2) ) + 'px';
+		}
+	}
+
 }
 		
 function centerOf(block) {
