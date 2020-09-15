@@ -8,25 +8,25 @@ let AUDIOS = {
 	sauce : new Audio('res/sauce.mp3'),
 	full : new Audio('res/full.mp3'),
 }
-let TARGET = {};
+let ELEMENT = {};
 let BLOCKS = [];
-let dest = 0; // the destination where a clone returns.
-
+let target = 0; // For swap : the destination where a clone returns.
+				// For row resize : upper element.
 let clone; // html element
 let isDraggingStarted = false;
 let oldMouseY = 0;
 
 
 async function main () {
-	TARGET = {
+	ELEMENT = {
 		blockContainer : document.getElementById('block-container'),
 		blocks : document.getElementsByClassName('block'),
 	};
 	
 	// block setting
 	let topSum = 0;
-	for( let i=0; i<TARGET.blocks.length; i++ ) {
-		BLOCKS.push(TARGET.blocks[i]);
+	for( let i=0; i<ELEMENT.blocks.length; i++ ) {
+		BLOCKS.push(ELEMENT.blocks[i]);
 		
 		BLOCKS[i].style.top = topSum + 'px';
 		topSum += BLOCKS[i].offsetHeight;
@@ -36,13 +36,25 @@ async function main () {
 	if( confirm('wanna play Audio?\n소리 재생 ㄱ?') == false ) { AUDIOS = {}; }
 	
 	// change block.style.top when screen is resized
-	TARGET.blockContainer.addEventListener('mousedown',startDrag);
-	TARGET.blockContainer.addEventListener('touchstart',startDrag);
-	TARGET.blockContainer.addEventListener('mouseup',endDrag);
-	TARGET.blockContainer.addEventListener('touchend',endDrag);
+	ELEMENT.blockContainer.addEventListener('mousedown',startDrag);
+	ELEMENT.blockContainer.addEventListener('touchstart',startDrag);
+	ELEMENT.blockContainer.addEventListener('mouseup',endDrag);
+	ELEMENT.blockContainer.addEventListener('touchend',endDrag);
 	window.addEventListener('resize', relocateBlocks);
 
 	
+}
+
+function selectResizeLine(e){
+	const block = e.target;
+	
+	//아래부분 마우스오버
+	if (e.clineY > block.offsetTop + block.offsetHeight*0.95 ){
+		console.log()
+	}
+	//윗부분 마우스오버
+	else if(e.target.offsetTop)
+
 }
 
 function startDrag (e) {
@@ -55,21 +67,21 @@ function startDrag (e) {
 	else { isDraggingStarted = true; }
 	
 	// make clone
-	dest = parseInt( (e.target.dataset).index );
+	target = parseInt( (e.target.dataset).index );
 	//console.log('start drag', BLOCKS[dest]);
 	
 	clone = document.createElement('div');
-	clone.style.top = BLOCKS[dest].style.top;
+	clone.style.top = BLOCKS[target].style.top;
 	clone.style.zIndex = 53;
 	clone.style.borderRadius = "100px";
 	
-	BLOCKS[dest].classList.forEach( className => clone.classList.add(className) ); // copy e.target -> clone
-	BLOCKS[dest].className = '';
-	BLOCKS[dest].classList.add("block", "empty");
+	BLOCKS[target].classList.forEach( className => clone.classList.add(className) ); // copy e.target -> clone
+	BLOCKS[target].className = '';
+	BLOCKS[target].classList.add("block", "empty");
 	
-	TARGET.blockContainer.insertBefore(clone, BLOCKS[dest]);
-	TARGET.blockContainer.addEventListener('mousemove', moveBlock);
-	TARGET.blockContainer.addEventListener('touchmove', moveBlock);
+	ELEMENT.blockContainer.insertBefore(clone, BLOCKS[target]);
+	ELEMENT.blockContainer.addEventListener('mousemove', moveBlock);
+	ELEMENT.blockContainer.addEventListener('touchmove', moveBlock);
 	
 	(Object.keys(AUDIOS)).forEach( audio => {
 		if ( clone.classList.contains(audio) ){
@@ -98,34 +110,34 @@ function moveBlock(e) {
 
 	
 	// 밑으로 보내기
-	if ( dest < BLOCKS.length-1 ) {
-		if ( clone.offsetTop + clone.offsetHeight > centerOf(BLOCKS[dest+1]) ) {
-			swapClassList( BLOCKS[dest], BLOCKS[dest+1] );
-			dest++;
+	if ( target < BLOCKS.length-1 ) {
+		if ( clone.offsetTop + clone.offsetHeight > centerOf(BLOCKS[target+1]) ) {
+			swapClassList( BLOCKS[target], BLOCKS[target+1] );
+			target++;
 		}
 	}
 	// 위로 보내기
-	if ( dest > 0 ) {
-		if ( clone.offsetTop < centerOf(BLOCKS[dest-1]) ) {
-			swapClassList( BLOCKS[dest], BLOCKS[dest-1] );
-			dest--;
+	if ( target > 0 ) {
+		if ( clone.offsetTop < centerOf(BLOCKS[target-1]) ) {
+			swapClassList( BLOCKS[target], BLOCKS[target-1] );
+			target--;
 		}
 	}
 }
 
 
 function endDrag(e) {
-	console.log('END drag', BLOCKS[dest]);
+	console.log('END drag', BLOCKS[target]);
 	
 	// remove clone
-	BLOCKS[dest].classList.remove('empty');
-	clone.classList.forEach( className => BLOCKS[dest].classList.add(className) ); // copy clone -> e.target
+	BLOCKS[target].classList.remove('empty');
+	clone.classList.forEach( className => BLOCKS[target].classList.add(className) ); // copy clone -> e.target
 	clone.className = '';
 	console.log('remove clone classlist ', clone.classList);
 	clone.remove();
 	
-	TARGET.blockContainer.removeEventListener('mousemove', moveBlock);
-	TARGET.blockContainer.removeEventListener('touchmove', moveBlock);
+	ELEMENT.blockContainer.removeEventListener('mousemove', moveBlock);
+	ELEMENT.blockContainer.removeEventListener('touchmove', moveBlock);
 	
 	// initial status check
 	// <!-- 빵 패티 소스 양상추 빵 패티 치즈 소스 양상추 빵 -->
