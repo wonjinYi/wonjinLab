@@ -72,7 +72,7 @@ a{
 .resize-bar:hover{
 	opacity : 0.7;
 }
-.disable{
+.disable-hover{
     pointer-events: none;
 }
 

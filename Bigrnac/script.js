@@ -41,7 +41,7 @@ async function main () {
 	for ( let i=0; i<BLOCKS.length-1; i++ ) {
 		RESIZEBARS.push( document.createElement('div') );
 		RESIZEBARS[i].classList.add('resize-bar');
-		
+		RESIZEBARS[i].dataset.index = i;
 		ELEMENT.blockContainer.insertBefore(RESIZEBARS[i], BLOCKS[i+1]);
 		
 		RESIZEBARS[i].style.top = ( BLOCKS[i+1].offsetTop - parseInt(RESIZEBARS[i].offsetHeight/2) ) + 'px';
@@ -50,7 +50,7 @@ async function main () {
 	// warn
 	if( confirm('wanna play Audio?\n소리 재생 ㄱ?') == false ) { AUDIOS = {}; }
 	
-	// change block.style.top when screen is resized
+	// EVENT listener
 	ELEMENT.blockContainer.addEventListener('mousedown',startDrag);
 	ELEMENT.blockContainer.addEventListener('touchstart',startDrag);
 	ELEMENT.blockContainer.addEventListener('mouseup',endDrag);
@@ -66,32 +66,33 @@ function startDrag (e) {
 	if (isDraggingStarted == true) { return 0; }
 	else { isDraggingStarted = true; }
 	
+	// Mobile or PC detect.
 	if (window.innerWidth > 769) { oldMouseY = e.clientY; }
 	else { oldMouseY = e.touches[0].clientY; }
 	
+	target = parseInt( (e.target.dataset).index );
 	
 	// SWAP =====================================================================================
+	// ==========================================================================================
 	if( BLOCKS.includes( e.target ) ) {
 		
 		MODE = 'swap';
-		Array.prototype.forEach.call( RESIZEBARS, bar => bar.classList.add('disable') );
+		Array.prototype.forEach.call( RESIZEBARS, bar => bar.classList.add('disable-hover') );
 		
 		// make clone
-		target = parseInt( (e.target.dataset).index );
-
 		clone = document.createElement('div');
 		clone.style.top = BLOCKS[target].style.top;
 		clone.style.zIndex = 53;
 		clone.style.borderRadius = "100px";
+		clone.style.height = BLOCKS[target].offsetHeight + 'px';
 
 		BLOCKS[target].classList.forEach( className => clone.classList.add(className) ); // copy e.target -> clone
 		BLOCKS[target].className = '';
 		BLOCKS[target].classList.add("block", "empty");
 
 		ELEMENT.blockContainer.insertBefore(clone, BLOCKS[target]);
-		ELEMENT.blockContainer.addEventListener('mousemove', moveBlock);
-		ELEMENT.blockContainer.addEventListener('touchmove', moveBlock);
-
+		
+		// play Audio
 		(Object.keys(AUDIOS)).forEach( audio => {
 			if ( clone.classList.contains(audio) ){
 				AUDIOS[audio].play();
@@ -100,28 +101,33 @@ function startDrag (e) {
 		})
 	}
 	
-	// RESIZE ==============================================================================
+	// RESIZE ===================================================================================
+	// ==========================================================================================
 	else if( RESIZEBARS.includes( e.target ) ) {
 		MODE = 'row-resize';
-		alert('resize bar - mouse down');
+		BLOCKS[target].classList.add('disable-hover');
+		BLOCKS[target+1].classList.add('disable-hover');
 	}
+	
+	ELEMENT.blockContainer.addEventListener('mousemove', movePointer);
+	ELEMENT.blockContainer.addEventListener('touchmove', movePointer);
+	
+	
 }
 
-function moveBlock(e) {
+function movePointer(e) {
+	let newMouseY = 0;
+	let delta = 0;
+	if (window.innerWidth > 769) { newMouseY = e.clientY;  }
+	else { newMouseY = e.touches[0].clientY; }
+	
+	delta = newMouseY - oldMouseY;
 	
 	// SWAP =====================================================================================
+	// ==========================================================================================
 	if( MODE == 'swap' ) {
-		let newPosition = 0;
-		if (window.innerWidth > 769) { 
-			clone.style.top = (clone.offsetTop + ( e.clientY - oldMouseY )) + 'px';
-			oldMouseY = e.clientY; 
-		}
-		else { 
-			clone.style.top = (clone.offsetTop + ( e.touches[0].clientY - oldMouseY )) + 'px';
-			oldMouseY = e.touches[0].clientY; 
-		}
-
-
+		clone.style.top = (clone.offsetTop + ( delta )) + 'px';
+		clone.style.height = BLOCKS[target].offsetHeight + 'px';
 		// 밑으로 보내기
 		if ( target < BLOCKS.length-1 ) {
 			if ( clone.offsetTop + clone.offsetHeight > centerOf(BLOCKS[target+1]) ) {
@@ -139,18 +145,54 @@ function moveBlock(e) {
 	}
 	
 	// RESIZE ==============================================================================
+	// ==========================================================================================
 	else if( MODE = 'row-resize' ) {
 		
+		console.log(target);
+		const min = 10;
+		
+		const TOP = BLOCKS[target].offsetTop;
+		const BOTTOM = BLOCKS[target+1].offsetTop + BLOCKS[target+1].offsetHeight;
+		
+		
+		// prevent overflow 
+		if( newMouseY > TOP + min && newMouseY < BOTTOM - min ){
+			RESIZEBARS[target].style.top = ( RESIZEBARS[target].offsetTop + delta ) + 'px';
+			BLOCKS[target].style.height = ( BLOCKS[target].offsetHeight + delta ) + 'px';
+			BLOCKS[target+1].style.height = ( BLOCKS[target+1].offsetHeight - delta ) + 'px' ;
+		}
+		else if ( newMouseY < TOP - min*2 || newMouseY > BOTTOM + min*2 ){
+			ELEMENT.blockContainer.dispatchEvent(new Event('mouseup'));
+		}
+		/*
+		if( BLOCKS[target].offsetHeight >= min  &&  BLOCKS[target+1].offsetHeight >= min ) {
+			RESIZEBARS[target].style.top = ( RESIZEBARS[target].offsetTop + delta ) + 'px';
+			BLOCKS[target].style.height = ( BLOCKS[target].offsetHeight + delta ) + 'px';
+			BLOCKS[target+1].style.height = ( BLOCKS[target+1].offsetHeight - delta ) + 'px' ;
+		}
+		else {
+			console.log('else');
+			if( BLOCKS[target].offsetHeight < min ) { BLOCKS[target].style.height = min + 'px'; }
+			else if( BLOCKS[target+1].offsetHeight < min ) { BLOCKS[target+1].style.height = min + 'px'; }
+		}
+		*/
+		
+		// relocate elements.
+		resizeScreen();
 	}
 	
+	
+	if (window.innerWidth > 769) { oldMouseY = e.clientY; }
+	else { oldMouseY = e.touches[0].clientY; }
 }
 
 
 function endDrag(e) {
 	
 	// SWAP =====================================================================================
+	// ==========================================================================================
 	if( MODE == 'swap' ) {
-		Array.prototype.forEach.call( RESIZEBARS, bar => bar.classList.remove('disable') );
+		Array.prototype.forEach.call( RESIZEBARS, bar => bar.classList.remove('disable-hover') );
 		
 		// remove clone
 		BLOCKS[target].classList.remove('empty');
@@ -159,23 +201,24 @@ function endDrag(e) {
 		console.log('remove clone classlist ', clone.classList);
 		clone.remove();
 
-		ELEMENT.blockContainer.removeEventListener('mousemove', moveBlock);
-		ELEMENT.blockContainer.removeEventListener('touchmove', moveBlock);
-
 		// initial status check
 		// 빵 패티 피클 양파 빵 패티 치즈 소스 양상추 빵
 		const kkiro = ['bun', 'patty', 'pickle', 'onion', 'bun', 'patty', 'cheese', 'sauce', 'lettuce', 'bun'];
 		for(let i=0; i<BLOCKS.length; i++){
 			if(BLOCKS[i].classList.contains(kkiro[i]) == false){break;}
-			else { if(i==BLOCKS.length-1){ AUDIOS['full'].play(); } }
+			else { if( i==BLOCKS.length-1 && Object.keys(AUDIOS).length > 0 ){ AUDIOS['full'].play(); } }
 		}
 	}
 	
 	// RESIZE ==============================================================================
+	// ==========================================================================================
 	else if( MODE = 'row-resize' ) {
-
+		BLOCKS[target].classList.remove('disable-hover');
+		BLOCKS[target+1].classList.remove('disable-hover');
 	}
-	
+
+	ELEMENT.blockContainer.removeEventListener('mousemove', movePointer);
+	ELEMENT.blockContainer.removeEventListener('touchmove', movePointer);
 	
 	isDraggingStarted = false;
 }
@@ -183,7 +226,7 @@ function endDrag(e) {
 
 
 
-function resizeScreen(e) {
+function resizeScreen() {
 	let topSum = 0;
 	for(let i=0; i<BLOCKS.length; i++){
 		// relocate BLOCKS
