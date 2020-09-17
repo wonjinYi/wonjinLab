@@ -37,11 +37,11 @@ a{
 
 .bun	{ background-color : #ff9500; transition : background-color 0.5s; }
 .patty	{ background-color : #854d00; transition : background-color 0.5s; }
-.sauce	{ background-color : #fffbe0; transition : background-color 0.5s; }
+.sauce	{ background-color : #ffee7d; transition : background-color 0.5s; }
 .lettuce{ background-color : #54b500; transition : background-color 0.5s; }
 .cheese	{ background-color : #ffdd00; transition : background-color 0.5s; }
 .pickle { background-color : #244d00; transition : background-color 0.5s; }
-.onion	{ background-color : #ffee7d; transition : background-color 0.5s; }
+.onion	{ background-color : #fffbe0; transition : background-color 0.5s; }
 .empty	{ background-color : #2F3336; transition : background-color 0.5s; }
 
 /*
