@@ -164,18 +164,6 @@ function movePointer(e) {
 		else if ( newMouseY < TOP - min*2 || newMouseY > BOTTOM + min*2 ){
 			ELEMENT.blockContainer.dispatchEvent(new Event('mouseup'));
 		}
-		/*
-		if( BLOCKS[target].offsetHeight >= min  &&  BLOCKS[target+1].offsetHeight >= min ) {
-			RESIZEBARS[target].style.top = ( RESIZEBARS[target].offsetTop + delta ) + 'px';
-			BLOCKS[target].style.height = ( BLOCKS[target].offsetHeight + delta ) + 'px';
-			BLOCKS[target+1].style.height = ( BLOCKS[target+1].offsetHeight - delta ) + 'px' ;
-		}
-		else {
-			console.log('else');
-			if( BLOCKS[target].offsetHeight < min ) { BLOCKS[target].style.height = min + 'px'; }
-			else if( BLOCKS[target+1].offsetHeight < min ) { BLOCKS[target+1].style.height = min + 'px'; }
-		}
-		*/
 		
 		// relocate elements.
 		resizeScreen();
