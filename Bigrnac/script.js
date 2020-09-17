@@ -21,7 +21,7 @@ let isDraggingStarted = false;
 let oldMouseY = 0;
 
 
-async function main () {
+function main () {
 	ELEMENT = {
 		blockContainer : document.getElementById('block-container'),
 		blocks : document.getElementsByClassName('block'),
@@ -55,7 +55,7 @@ async function main () {
 	ELEMENT.blockContainer.addEventListener('touchstart',startDrag);
 	ELEMENT.blockContainer.addEventListener('mouseup',endDrag);
 	ELEMENT.blockContainer.addEventListener('touchend',endDrag);
-	
+
 	window.addEventListener('resize', resizeScreen);
 }
 
@@ -128,14 +128,14 @@ function movePointer(e) {
 	if( MODE == 'swap' ) {
 		clone.style.top = (clone.offsetTop + ( delta )) + 'px';
 		clone.style.height = BLOCKS[target].offsetHeight + 'px';
-		// 밑으로 보내기
+		// go down
 		if ( target < BLOCKS.length-1 ) {
 			if ( clone.offsetTop + clone.offsetHeight > centerOf(BLOCKS[target+1]) ) {
 				swapClassList( BLOCKS[target], BLOCKS[target+1] );
 				target++;
 			}
 		}
-		// 위로 보내기
+		// go up
 		if ( target > 0 ) {
 			if ( clone.offsetTop < centerOf(BLOCKS[target-1]) ) {
 				swapClassList( BLOCKS[target], BLOCKS[target-1] );
@@ -148,7 +148,6 @@ function movePointer(e) {
 	// ==========================================================================================
 	else if( MODE = 'row-resize' ) {
 		
-		console.log(target);
 		const min = 10;
 		
 		const TOP = BLOCKS[target].offsetTop;
@@ -186,12 +185,11 @@ function endDrag(e) {
 		BLOCKS[target].classList.remove('empty');
 		clone.classList.forEach( className => BLOCKS[target].classList.add(className) ); // copy clone -> e.target
 		clone.className = '';
-		console.log('remove clone classlist ', clone.classList);
 		clone.remove();
 
-		// initial status check
-		// 빵 패티 피클 양파 빵 패티 치즈 소스 양상추 빵
-		const kkiro = ['bun', 'patty', 'pickle', 'onion', 'bun', 'patty', 'cheese', 'sauce', 'lettuce', 'bun'];
+		// special audio(full cm song) - It is played if current order follow this : 
+		// onion pickle cheese lettuce sauce patty patty bun bun bun 
+		const kkiro = ['onion', 'pickle', 'cheese', 'lettuce', 'sauce', 'patty', 'patty', 'bun', 'bun', 'bun'];
 		for(let i=0; i<BLOCKS.length; i++){
 			if(BLOCKS[i].classList.contains(kkiro[i]) == false){break;}
 			else { if( i==BLOCKS.length-1 && Object.keys(AUDIOS).length > 0 ){ AUDIOS['full'].play(); } }

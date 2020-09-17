@@ -13,8 +13,10 @@ body{
 		
 }
 a{
+	position : absolute;
 	text-decoration : none;
 	color : white;
+	top : 0px;
 }
 
 
