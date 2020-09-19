@@ -13,11 +13,11 @@ async function main(){
 	};
 	
 	const preDefined={
-		loanDate : new Date('2020-09-19T14:05:00'),
-		principle : 30000,
-		interestRate : 0.001,
+		loanDate : new Date('2020-08-08T19:56:00'),
+		principle : 15500,
+		interestRate : 0.3,
 		interestInterval : 'sec',
-	}//
+	}
 	let now;
 	let elapsedTime;
 	let needRepayment;
@@ -42,7 +42,7 @@ async function main(){
 	
 	//joke.
 	for(let i=0; i<TARGET.cell.length; i++){
-		TARGET.cell[i].addEventListener('click', (e)=>{alert(`최재원님, ${needRepayment}원의 상환이 필요합니다. 상환 문의 이원진`)});
+		TARGET.cell[i].addEventListener('click', (e)=>{alert(`${needRepayment}원의 상환이 필요합니다. 상환 문의 이원진`)});
 	}
 	
 
