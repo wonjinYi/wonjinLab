@@ -13,6 +13,10 @@ let MODE = ''; // swap  OR  row-resize
 let isDraggingStarted = false;
 let oldMouseY = 0;
 
+const SEQUENCE = ['bun',	'patty',			'patty',	'sauce',	'lettuce',	'cheese',	'pickle',	'onion',	'bun'];
+				//참깨빵,	위에 순쇠고기패티,	두장, 		특별한소스,	양상추,	치즈,			피클, 	양파, 	까지  ----> 빠빠빠라빠
+let sequencingStack = 0; // ingredients sequencing progress. max : 9
+let timeoutID = 0;
 
 function main () {
 	ELEMENT = {
@@ -28,7 +32,12 @@ function main () {
 			sauce : new Audio('res/sauce.mp3'),
 			onion : new Audio('res/onion.mp3'),
 			pickle : new Audio('res/pickle.mp3'),
-			full : new Audio('res/full_new.mp3'),
+			//full : new Audio('res/full_new.mp3'),
+			
+			up : new Audio('res/up.mp3'),
+			doojang : new Audio('res/doojang.mp3'),
+			kazi : new Audio('res/kazi.mp3'),
+			finish : new Audio('res/finish.mp3'),
 		}
 	}
 
@@ -74,8 +83,12 @@ function startDrag (e) {
 	else { isDraggingStarted = true; }
 	
 	// Mobile or PC detect.
+	/*
 	if ( window.innerWidth > 769 ){ oldMouseY = e.clientY; }
 	else { oldMouseY = e.touches[0].clientY; }
+	*/
+	if (typeof e.touches === "undefined") oldMouseY = e.clientY;
+	else oldMouseY = e.touches[0].clientY;
 	
 	// Set target
 	target = parseInt( (e.target.dataset).index );
@@ -104,10 +117,49 @@ function startDrag (e) {
 		// play Audio
 		(Object.keys(AUDIOS)).forEach( audio => {
 			if ( clone.classList.contains(audio) ){
-				AUDIOS[audio].play();
+				if ( sequencingStack == 0 ){
+					AUDIOS[audio].play();
+					if( audio == SEQUENCE[sequencingStack] ){ sequencingStack++; }
+				}
+				else if ( sequencingStack < 9 && audio == SEQUENCE[sequencingStack] ){
+					clearTimeout(timeoutID);
+					
+					switch(sequencingStack){
+						case 1:
+							AUDIOS['up'].play()
+							setTimeout( () => AUDIOS['patty'].play(), 300 );
+							
+							break;
+						case 2:
+							AUDIOS['doojang'].play();
+							break;
+						case 8:
+							AUDIOS['kazi'].play();
+							break;
+						default:
+							AUDIOS[audio].play();
+							break;
+					}
+					
+					timeoutID = setTimeout( () => sequencingStack = 0 ,
+							 	 3000);
+					sequencingStack++;
+					
+					if( sequencingStack == 9 ){
+						setTimeout( () => AUDIOS['finish'].play() , 1000 );
+					}
+					//doSequencing(sequencingStack);
+				}
+				else {
+					AUDIOS[audio].play();
+					sequencingStack = 0;
+				}
+				
 				return;
 			}
-		})
+		});
+		console.log(sequencingStack);
+		
 	}
 	
 		// RESIZE ===================================================================================
@@ -197,11 +249,11 @@ function endDrag(e) {
 
 		// special audio(full cm song) - It is played if current order follow this : 
 		// onion pickle cheese lettuce sauce patty patty bun bun bun 
-		const kkiro = ['onion', 'pickle', 'cheese', 'lettuce', 'sauce', 'patty', 'patty', 'bun', 'bun', 'bun'];
+		/*const kkiro = ['onion', 'pickle', 'cheese', 'lettuce', 'sauce', 'patty', 'patty', 'bun', 'bun', 'bun'];
 		for ( let i=0; i<BLOCKS.length; i++ ){
 			if ( BLOCKS[i].classList.contains(kkiro[i]) == false ){ break; }
 			else { if ( i==BLOCKS.length-1 && Object.keys(AUDIOS).length > 0 ){ AUDIOS['full'].play(); } }
-		}
+		}*/
 	}
 	
 		// RESIZE ==============================================================================
@@ -224,6 +276,11 @@ function endDrag(e) {
 //													U 	T 	I 	L 	I 	T 	Y
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function doSequencing(stack){
+	
+	//setTimeout( () => sequencingStack = 0 , 1500 );
+}
 
 function resizeScreen() {
 	let topSum = 0;
