@@ -1,3 +1,6 @@
+// window.matchMedia('(pointer: coarse)').matches
+// momo. by guiro.
+
 window.addEventListener('DOMContentLoaded', main);
 
 let AUDIOS = {}
