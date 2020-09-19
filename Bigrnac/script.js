@@ -1,22 +1,15 @@
 window.addEventListener('DOMContentLoaded', main);
 
-let AUDIOS = {
-	bun : new Audio('res/bun.mp3'),
-	cheese : new Audio('res/cheese.mp3'),
-	lettuce : new Audio('res/lettuce.mp3'),
-	patty : new Audio('res/patty.mp3'),
-	sauce : new Audio('res/sauce.mp3'),
-	onion : new Audio('res/onion.mp3'),
-	pickle : new Audio('res/pickle.mp3'),
-	full : new Audio('res/full_new.mp3'),
-}
+let AUDIOS = {}
 let ELEMENT = {};
+
 let BLOCKS = [];
 let RESIZEBARS = [];
+let clone; // html element used for BLOCK swap
+
 let target = 0; // For swap : the destination where a clone returns.
 				// For row resize : upper element.
 let MODE = ''; // swap  OR  row-resize
-let clone; // html element
 let isDraggingStarted = false;
 let oldMouseY = 0;
 
@@ -26,7 +19,19 @@ function main () {
 		blockContainer : document.getElementById('block-container'),
 		blocks : document.getElementsByClassName('block'),
 	};
-	
+	if ( confirm('wanna play Audio?\n소리 재생 ㄱ?') ) { 
+		AUDIOS = {
+			bun : new Audio('res/bun.mp3'),
+			cheese : new Audio('res/cheese.mp3'),
+			lettuce : new Audio('res/lettuce.mp3'),
+			patty : new Audio('res/patty.mp3'),
+			sauce : new Audio('res/sauce.mp3'),
+			onion : new Audio('res/onion.mp3'),
+			pickle : new Audio('res/pickle.mp3'),
+			full : new Audio('res/full_new.mp3'),
+		}
+	}
+
 	// block setting
 	let topSum = 0;
 	for( let i=0; i<ELEMENT.blocks.length; i++ ) {
@@ -47,9 +52,6 @@ function main () {
 		RESIZEBARS[i].style.top = ( BLOCKS[i+1].offsetTop - parseInt(RESIZEBARS[i].offsetHeight/2) ) + 'px';
 	}
 	
-	// warn
-	if( confirm('wanna play Audio?\n소리 재생 ㄱ?') == false ) { AUDIOS = {}; }
-	
 	// EVENT listener
 	ELEMENT.blockContainer.addEventListener('mousedown',startDrag);
 	ELEMENT.blockContainer.addEventListener('touchstart',startDrag);
@@ -59,22 +61,29 @@ function main () {
 	window.addEventListener('resize', resizeScreen);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//										main Logic ( startDrag -> movePointer -> endDrag )
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function startDrag (e) {
 	e.preventDefault()
 	
-	if (isDraggingStarted == true) { return 0; }
+	if ( isDraggingStarted == true ){ return 0; }
 	else { isDraggingStarted = true; }
 	
 	// Mobile or PC detect.
-	if (window.innerWidth > 769) { oldMouseY = e.clientY; }
+	if ( window.innerWidth > 769 ){ oldMouseY = e.clientY; }
 	else { oldMouseY = e.touches[0].clientY; }
 	
+	// Set target
 	target = parseInt( (e.target.dataset).index );
 	
-	// SWAP =====================================================================================
+	
+		// SWAP =====================================================================================
 	// ==========================================================================================
-	if( BLOCKS.includes( e.target ) ) {
+	if( BLOCKS.includes( e.target ) ){
 		
 		MODE = 'swap';
 		Array.prototype.forEach.call( RESIZEBARS, bar => bar.classList.add('disable-hover') );
@@ -86,7 +95,7 @@ function startDrag (e) {
 		clone.style.borderRadius = "100px";
 		clone.style.height = BLOCKS[target].offsetHeight + 'px';
 
-		BLOCKS[target].classList.forEach( className => clone.classList.add(className) ); // copy e.target -> clone
+		copyClassList(BLOCKS[target], clone) // copy e.target -> clone
 		BLOCKS[target].className = '';
 		BLOCKS[target].classList.add("block", "empty");
 
@@ -101,33 +110,34 @@ function startDrag (e) {
 		})
 	}
 	
-	// RESIZE ===================================================================================
+		// RESIZE ===================================================================================
 	// ==========================================================================================
-	else if( RESIZEBARS.includes( e.target ) ) {
+	else if( RESIZEBARS.includes( e.target ) ){
 		MODE = 'row-resize';
 		BLOCKS[target].classList.add('disable-hover');
 		BLOCKS[target+1].classList.add('disable-hover');
 	}
 	
+	
 	ELEMENT.blockContainer.addEventListener('mousemove', movePointer);
 	ELEMENT.blockContainer.addEventListener('touchmove', movePointer);
-	
-	
 }
 
-function movePointer(e) {
+function movePointer(e){
 	let newMouseY = 0;
 	let delta = 0;
+	
 	if (window.innerWidth > 769) { newMouseY = e.clientY;  }
 	else { newMouseY = e.touches[0].clientY; }
 	
 	delta = newMouseY - oldMouseY;
 	
-	// SWAP =====================================================================================
+		// SWAP =====================================================================================
 	// ==========================================================================================
-	if( MODE == 'swap' ) {
+	if( MODE == 'swap' ){
 		clone.style.top = (clone.offsetTop + ( delta )) + 'px';
 		clone.style.height = BLOCKS[target].offsetHeight + 'px';
+		
 		// go down
 		if ( target < BLOCKS.length-1 ) {
 			if ( clone.offsetTop + clone.offsetHeight > centerOf(BLOCKS[target+1]) ) {
@@ -144,18 +154,16 @@ function movePointer(e) {
 		}
 	}
 	
-	// RESIZE ==============================================================================
+		// RESIZE ==============================================================================
 	// ==========================================================================================
-	else if( MODE = 'row-resize' ) {
-		
+	else if ( MODE = 'row-resize' ){
 		const min = 10;
 		
 		const TOP = BLOCKS[target].offsetTop;
 		const BOTTOM = BLOCKS[target+1].offsetTop + BLOCKS[target+1].offsetHeight;
 		
-		
 		// prevent overflow 
-		if( newMouseY > TOP + min && newMouseY < BOTTOM - min ){
+		if ( newMouseY > TOP + min && newMouseY < BOTTOM - min ){
 			RESIZEBARS[target].style.top = ( RESIZEBARS[target].offsetTop + delta ) + 'px';
 			BLOCKS[target].style.height = ( BLOCKS[target].offsetHeight + delta ) + 'px';
 			BLOCKS[target+1].style.height = ( BLOCKS[target+1].offsetHeight - delta ) + 'px' ;
@@ -169,16 +177,16 @@ function movePointer(e) {
 	}
 	
 	
-	if (window.innerWidth > 769) { oldMouseY = e.clientY; }
+	if ( window.innerWidth > 769 ){ oldMouseY = e.clientY; }
 	else { oldMouseY = e.touches[0].clientY; }
 }
 
 
 function endDrag(e) {
 	
-	// SWAP =====================================================================================
+		// SWAP =====================================================================================
 	// ==========================================================================================
-	if( MODE == 'swap' ) {
+	if ( MODE == 'swap' ){
 		Array.prototype.forEach.call( RESIZEBARS, bar => bar.classList.remove('disable-hover') );
 		
 		// remove clone
@@ -190,15 +198,15 @@ function endDrag(e) {
 		// special audio(full cm song) - It is played if current order follow this : 
 		// onion pickle cheese lettuce sauce patty patty bun bun bun 
 		const kkiro = ['onion', 'pickle', 'cheese', 'lettuce', 'sauce', 'patty', 'patty', 'bun', 'bun', 'bun'];
-		for(let i=0; i<BLOCKS.length; i++){
-			if(BLOCKS[i].classList.contains(kkiro[i]) == false){break;}
-			else { if( i==BLOCKS.length-1 && Object.keys(AUDIOS).length > 0 ){ AUDIOS['full'].play(); } }
+		for ( let i=0; i<BLOCKS.length; i++ ){
+			if ( BLOCKS[i].classList.contains(kkiro[i]) == false ){ break; }
+			else { if ( i==BLOCKS.length-1 && Object.keys(AUDIOS).length > 0 ){ AUDIOS['full'].play(); } }
 		}
 	}
 	
-	// RESIZE ==============================================================================
+		// RESIZE ==============================================================================
 	// ==========================================================================================
-	else if( MODE = 'row-resize' ) {
+	else if ( MODE = 'row-resize' ){
 		BLOCKS[target].classList.remove('disable-hover');
 		BLOCKS[target+1].classList.remove('disable-hover');
 	}
@@ -211,10 +219,15 @@ function endDrag(e) {
 
 
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//													U 	T 	I 	L 	I 	T 	Y
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function resizeScreen() {
 	let topSum = 0;
-	for(let i=0; i<BLOCKS.length; i++){
+	for ( let i=0; i<BLOCKS.length; i++ ){
 		// relocate BLOCKS
 		BLOCKS[i].style.top = topSum + 'px';
 		topSum += BLOCKS[i].offsetHeight;
@@ -226,7 +239,7 @@ function resizeScreen() {
 	}
 
 }
-		
+
 function centerOf(block) {
 	const height = block.offsetHeight;
 	const top = block.offsetTop;
@@ -236,7 +249,7 @@ function centerOf(block) {
 
 function copyClassList(src, dest){
 	// copy to dest from src
-	res.classList.forEach( className => {
+	src.classList.forEach( className => {
 		dest.classList.add(className);
 	});
 }
