@@ -17,7 +17,7 @@ async function main(){
 		principle : 30000,
 		interestRate : 0.001,
 		interestInterval : 'sec',
-	}
+	}//
 	let now;
 	let elapsedTime;
 	let needRepayment;
