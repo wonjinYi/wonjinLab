@@ -1,0 +1,24 @@
+{
+  "files": {
+    "main.css": "/static/css/main.b2fa245c.chunk.css",
+    "main.js": "/static/js/main.a1f45c56.chunk.js",
+    "main.js.map": "/static/js/main.a1f45c56.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.800448e1.js",
+    "runtime-main.js.map": "/static/js/runtime-main.800448e1.js.map",
+    "static/css/2.f64a740d.chunk.css": "/static/css/2.f64a740d.chunk.css",
+    "static/js/2.629cfbba.chunk.js": "/static/js/2.629cfbba.chunk.js",
+    "static/js/2.629cfbba.chunk.js.map": "/static/js/2.629cfbba.chunk.js.map",
+    "index.html": "/index.html",
+    "static/css/2.f64a740d.chunk.css.map": "/static/css/2.f64a740d.chunk.css.map",
+    "static/css/main.b2fa245c.chunk.css.map": "/static/css/main.b2fa245c.chunk.css.map",
+    "static/js/2.629cfbba.chunk.js.LICENSE.txt": "/static/js/2.629cfbba.chunk.js.LICENSE.txt",
+    "static/media/wannagohome.bdfa1aad.png": "/static/media/wannagohome.bdfa1aad.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.800448e1.js",
+    "static/css/2.f64a740d.chunk.css",
+    "static/js/2.629cfbba.chunk.js",
+    "static/css/main.b2fa245c.chunk.css",
+    "static/js/main.a1f45c56.chunk.js"
+  ]
+}
